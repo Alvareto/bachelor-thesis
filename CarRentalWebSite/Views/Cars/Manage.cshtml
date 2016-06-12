@@ -1,0 +1,122 @@
+﻿@*@using CarRental.EntityFramework
+@using CarRentalWebSite.Helpers
+@model CarRentalWebSite.Models.CarSpecificationViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Car</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Car.Manufacturer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Car.Manufacturer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Car.Model)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Car.Model)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Uredi", "Edit", new { id = Model.Car.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Nazad na popis automobila", "Index", new { }, htmlAttributes: new { @class = "btn btn-info" })
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>specifikaciju automobila</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label(CarDetailType.GasTankCapacity.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GasTankCapacity.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GasTankCapacity.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(CarDetailType.EnginePower.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EnginePower.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EnginePower.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(CarDetailType.FuelConsumption.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FuelConsumption.Value, new { htmlAttributes = new { @class = "form-control" }, value = "proba" })
+                @Html.ValidationMessageFor(model => model.FuelConsumption.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Spremi" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table">
+        <tr>
+            <td>
+                @Html.Label(CarDetailType.FuelConsumption.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.FuelConsumption.Value)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.FuelConsumption.Value, new { htmlAttributes = new { @class = "form-control" }, value = "proba" })
+                @Html.ValidationMessageFor(model => model.FuelConsumption.Value, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Label(CarDetailType.EnginePower.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.EnginePower.Value)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.EnginePower.Value, new { htmlAttributes = new { @class = "form-control" }, value = "proba" })
+                @Html.ValidationMessageFor(model => model.EnginePower.Value, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Label(CarDetailType.GasTankCapacity.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.GasTankCapacity.Value)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.GasTankCapacity.Value, new { htmlAttributes = new { @class = "form-control" }, value = "proba" })
+                @Html.ValidationMessageFor(model => model.GasTankCapacity.Value, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+    </table>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Spremi" class="btn btn-success" />
+        </div>
+    </div>
+}*@

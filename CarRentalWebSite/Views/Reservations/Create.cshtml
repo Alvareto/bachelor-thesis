@@ -1,0 +1,99 @@
+﻿@using CarRental.EntityFramework
+@model CarRental.EntityFramework.Reservation
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Napravi</h2>
+
+@using (Html.BeginForm("Check", "Reservations", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Rezervaciju</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateStarted, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateStarted, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DateStarted, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateEnded, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateEnded, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DateEnded, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.Office.City, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("officeId", (SelectList)ViewBag.Offices, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Car.Office.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Provjeri dostupnost" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Car.Manufacturer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Car.Model)
+        </th>
+        <th>Ukupno dana</th>
+        <th>@Html.DisplayNameFor(model => model.Car.Price)</th>
+        <th>Ukupna cijena</th>
+        <th></th>
+    </tr>
+
+    @foreach (var car in (List<Car>)ViewBag.Cars)
+    {
+        using (Html.BeginForm("Reserve", "Reservations", new { carId = car.Id, started = Model.DateStarted, ended = Model.DateEnded }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <tr>
+                <td>
+                    @Html.Raw(car.Manufacturer)
+                </td>
+                <td>
+                    @Html.Raw(car.Model)
+                </td>
+                <td>
+                    @Html.Raw((Model.DateEnded - Model.DateStarted).Days + " dana")
+                </td>
+                <td>
+                    @string.Format("{0:C}", car.GetReservationPrice(Model.DateStarted))
+                </td>
+                <td>
+                    @string.Format("{0:C}", (Model.DateEnded - Model.DateStarted).Days * car.GetReservationPrice(Model.DateStarted))
+                </td>
+                <td>
+                    @Html.ActionLink("Rezerviraj", "Reserve", new { carId = car.Id, started = Model.DateStarted, ended = Model.DateEnded }, new { @class = "btn btn-success" })
+                    <input type="submit" value="Rezerviraj" class="btn btn-success" />
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

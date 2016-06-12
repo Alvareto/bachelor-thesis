@@ -1,0 +1,128 @@
+﻿body {
+    padding-bottom: 20px;
+    -ms-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+* {
+    -ms-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+#images .item {
+    width: 152.5px;
+    float: left;
+}
+
+    #images .item img {
+        display: block;
+        width: 100%;
+    }
+
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.thumbnail img {
+    width: 100%;
+}
+
+.ratings {
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #d17581;
+    font-size: 16px;
+}
+
+    .ratings p {
+        padding-top: 10px;
+    }
+
+.review {
+    padding: 10px 10px 0 10px;
+    color: #d17581;
+}
+
+.navigation {
+    color: #d17581;
+    margin-top: 125px;
+    font-size: 22px;
+}
+
+label, a, a:hover {
+    color: #d17581;
+}
+
+.table-label {
+    -moz-min-width: 300px;
+    -ms-min-width: 300px;
+    -o-min-width: 300px;
+    -webkit-min-width: 300px;
+    min-width: 300px;
+}
+
+#cityName {
+    color: #d17581;
+    font-weight: bold;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+dt, dd {
+    padding: 3px 0;
+    /*margin-left: -30px;*/
+}
+
+dd {
+    -moz-min-width: 115px;
+    -ms-min-width: 115px;
+    -o-min-width: 115px;
+    -webkit-min-width: 115px;
+    min-width: 115px;
+}
+
+dt {
+    color: #d17581;
+}
+
+div {
+    /*border: 1px #d17581 dotted;*/
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+    .thumbnail .caption-full {
+        padding: 9px;
+        color: #333;
+    }
+
+footer {
+    margin: 50px 0;
+}
+
+th, td {
+    text-align: center;
+}

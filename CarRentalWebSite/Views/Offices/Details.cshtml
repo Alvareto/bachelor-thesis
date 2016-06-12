@@ -1,0 +1,87 @@
+﻿@model CarRental.EntityFramework.Office
+
+@{
+    ViewBag.Title = "Detalji o uredu";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading img-responsive" style="background: url(http://placehold.it/1200x100) no-repeat;">
+
+        <div class="panel-heading">
+            <h3>
+                Detalji o uredu
+            </h3>
+            <div class="pull-right">
+                @Html.ActionLink("Izmjeni podatke", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Zatvori ured", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Nazad na popis ureda", "Index", "Offices", new { @class = "btn btn-info" })
+            </div>
+        </div>
+
+        <div class="panel panel-default" style="margin-bottom: 0;">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.City)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.City)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Discount)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Discount)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <p>
+            @Html.ActionLink("Dodaj novi automobil", "Create", "Cars", new { officeId = Model.Id }, new { @class = "btn btn-success" })
+        </p>
+        <table class="table">
+            <tr>
+                <th>Proizvođač</th>
+                <th>Model</th>
+                <th>Cijena</th>
+                <th>s popustom</th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.Cars)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Manufacturer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", item.GetPriceOffSeason())
+                    </td>
+                    <td>
+                        @Html.ActionLink("Uredi", "Edit", "Cars", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Detalji", "Details", "Cars", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Izbriši", "Delete", "Cars", new { id = item.Id }, new { })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

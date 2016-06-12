@@ -1,0 +1,68 @@
+﻿@using CarRental.EntityFramework
+@using CarRentalWebSite.Helpers;
+@model CarRentalWebSite.Models.CarSpecificationViewModel
+
+
+@{
+    ViewBag.Title = "Unesi specifikaciju automobila";
+
+}
+
+<h2>Unesi</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>specifikaciju automobila</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+
+            @Html.Label(CarDetailType.GasTankCapacity.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.GasTankCapacity.Id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.GasTankCapacity.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GasTankCapacity.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(CarDetailType.EnginePower.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.EnginePower.Id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EnginePower.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EnginePower.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(CarDetailType.FuelConsumption.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.FuelConsumption.Id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FuelConsumption.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FuelConsumption.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*@Html.HiddenFor(model => model.Car.Id, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Car.Id, "", new { @class = "text-danger" })*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Spremi" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Vrati se na detalje automobila", "Details", "Cars", new { id = ViewBag.carId }, new { @class = "btn btn-info" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

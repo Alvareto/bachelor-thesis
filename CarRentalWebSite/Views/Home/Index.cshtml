@@ -1,0 +1,242 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@Html.Partial("_OfficePartial")
+<div class="row">
+    <div class="col-md-1">
+        <span class=" pull-right navigation">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </span>
+    </div>
+    <div class="col-md-10">
+        <div class="row">
+
+            @*<div class="col-md-3">
+                    <p class="lead">Shop Name</p>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">Category 1</a>
+                        <a href="#" class="list-group-item">Category 2</a>
+                        <a href="#" class="list-group-item">Category 3</a>
+                    </div>
+                </div>*@
+
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img class="img-responsive" src="http://placehold.it/600x400" alt="">
+                        <hr/>
+                        <div id="images">
+                            <div class="item">
+                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <h4 href="#">Volkswagen Golf IV</h4>
+                            </div>
+                            <div class="col-md-5">
+
+                                <div class="ratings pull-right">
+                                    <p>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        4.0
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        Snaga motora
+                                    </dt>
+                                    <dd>
+                                        110 KS
+                                    </dd>
+                                    <dt>
+                                        Max brzina
+                                    </dt>
+                                    <dd>
+                                        160 km/h
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        Spremnik goriva
+                                    </dt>
+                                    <dd>
+                                        40 L
+                                    </dd>
+                                    <dt>
+                                        Potrošnja goriva
+                                    </dt>
+                                    <dd>
+                                        5,3 L/100km
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-horizontal">
+
+                                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Od</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="date" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Do</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="date" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Provjeri dostupnost" class="btn" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="text-success">
+                                        Automobil je <strong>dostupan</strong> u traženo vrijeme.
+                                    </p>
+                                    <p>
+                                        Želite li napraviti rezervaciju?
+                                    </p>
+                                </div>
+                                <div class="col-md-6 pull-right">
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            Cijena
+                                        </dt>
+                                        <dd>
+                                            832,64 HRK
+                                        </dd>
+                                        <dt>
+                                            Gorivo
+                                        </dt>
+                                        <dd>
+                                            200,00 HRK
+                                        </dd>
+                                        <hr />
+                                        <dt>
+                                            Ukupno
+                                        </dt>
+                                        <dd>
+                                            <b>1032,64 HRK</b>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <button class="btn btn-success pull-right">Rezerviraj</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="well-sm" style="-ms-border-radius: 0; border-radius: 0;">
+                <p class="pull-left review">2 komentara</p>
+                <div class="text-right">
+                    <a class="btn btn-success">Ostavi komentar o iskustvu vožnje</a>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        Marko Markić
+                        <span class="pull-right">prije 10 dana</span>
+                        <p>Jako kvalitetan auto koji opravdava svoju visoku cijenu. Mala potrošnja goriva ga čini isplativim za iznajmljivanje.</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        Ivo Ivić
+                        <span class="pull-right">prije 12 dana</span>
+                        <p>Ovo je već treći put da iznajmljujem ovaj auto i dosad nije razočarao.</p>
+                    </div>
+                </div>
+
+                @*<hr>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            Anonymous
+                            <span class="pull-right">15 days ago</span>
+                            <p>I've seen some better than this, but not at this price. I definitely recommend this item.</p>
+                        </div>
+                    </div>*@
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-1">
+        <span class=" pull-right navigation">
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </span>
+    </div>
+</div>

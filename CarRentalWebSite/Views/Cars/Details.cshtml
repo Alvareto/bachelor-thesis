@@ -1,0 +1,110 @@
+﻿@using CarRentalWebSite.Helpers
+@model CarRental.EntityFramework.Car
+
+@{
+    ViewBag.Title = "Details";
+}
+<div class="panel panel-default">
+    <div class="panel-heading img-responsive" style="background: url(http://placehold.it/1200x100) no-repeat;">
+
+        <div class="panel-heading">
+            <h3>
+                Detalji o automobilu
+            </h3>
+            <div class="pull-right">
+                @Html.ActionLink("Izmjeni podatke", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Ukloni automobil", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Nazad na popis automobila", "Index", new { }, new { @class = "btn btn-info" })
+
+            </div>
+        </div>
+
+        <div class="panel panel-default" style="margin-bottom: 0;">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Manufacturer)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Manufacturer)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Model)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Model)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Office.City)
+                            
+                                @Html.DisplayFor(model => model.Office.City)
+                            </dt>
+                        </dl><br/>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </dt>
+
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Price)
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayName("van sezone")
+                                    </dt>
+
+                                    <dd>
+                                        @string.Format("{0:C}", Model.GetPriceOffSeason())
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <p>
+            @Html.ActionLink(linkText: "Unesi specifikaciju automobila", actionName: "CreateAll", controllerName: "CarDetails", routeValues: new { carId = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+        </p>
+        <table class="table">
+            @foreach (var item in Model.CarDetails)
+            {
+                <tr>
+                    <td>
+                        @Html.Label(item.Type.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2 table-label" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Uredi", "Edit", "CarDetails", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Detalji", "Details", "CarDetails", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Izbriši", "Delete", "CarDetails", new { id = item.Id }, new { })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
