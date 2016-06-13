@@ -8,13 +8,37 @@ using System.Web;
 using System.Web.Mvc;
 using CarRental.EntityFramework;
 using CarRentalWebSite.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace CarRentalWebSite
 {
     public class ReviewsController : Controller
     {
         private CarRentalWebSiteContext db = new CarRentalWebSiteContext();
+        private ApplicationUserManager _userManager;
 
+        public ReviewsController()
+        {
+        }
+
+        public ReviewsController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
         // GET: Reviews
         public ActionResult Index()
         {
@@ -37,9 +61,10 @@ namespace CarRentalWebSite
         }
 
         // GET: Reviews/Create
-        public ActionResult Create(int reservationId)
+        public ActionResult Create(int carId)
         {
-            return View();
+            // Pass on a Review object with predefined Car field.
+            return View(new Review { Car = db.CarSet.Find(carId) });
         }
 
         // POST: Reviews/Create
@@ -47,10 +72,11 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Rating,Comment")] Review review)
+        public ActionResult Create([Bind(Include = "Id,Rating,Comment")] Review review, int carId)
         {
             if (ModelState.IsValid)
             {
+                review.Car = db.CarSet.Find(carId);
                 db.ReviewSet.Add(review);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -123,6 +149,24 @@ namespace CarRentalWebSite
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Used to retrieve user profile information, like FirstName, LastName and City.
+        /// </summary>
+        /// <param name="userId">Reservation.Client_Id</param>
+        /// <returns>ApplicationUser</returns>
+        public ApplicationUser GetUser(String userId)
+        {
+            return UserManager.FindById(userId);
+        }
+
+        public String UserName(String userId)
+        {
+            var u = GetUser(userId);
+            if (string.IsNullOrEmpty(u.FirstName) && string.IsNullOrEmpty(u.LastName))
+                return u.UserName;
+            return u.FirstName + " " + u.LastName;
         }
     }
 }

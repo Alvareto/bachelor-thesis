@@ -1,5 +1,6 @@
 ﻿@using System.Web.Mvc.Html
 @using CarRental.EntityFramework
+@using CarRentalWebSite.Controllers
 @using CarRentalWebSite.Helpers
 @model CarRentalWebSite.Models.CarDetailsViewModel
 
@@ -29,7 +30,7 @@
                 </div>
 
             }
-            
+
         </div>
         <div class="panel-footer" style="min-height: 50px;">
             @if (Model.PrevCar != null)
@@ -95,15 +96,15 @@
 
                                 <div class="ratings pull-right">
                                     <p>
-                                        @for (int i = 0; i < Model.AverageRating; i++)
+                                        @for (int i = 0; i < Model.RatingStars; i++)
                                         {
                                             <span class="glyphicon glyphicon-star"></span>
                                         }
-                                        @for (int i = 0; i < 5 - Model.AverageRating; i++)
+                                        @for (int i = 0; i < 5 - Model.RatingStars; i++)
                                         {
                                             <span class="glyphicon glyphicon-star-empty"></span>
                                         }
-                                        @Html.DisplayFor(model => model.AverageRating)
+                                        @Html.FormatValue(Model.AverageRating, "{0:N2}")
                                     </p>
                                 </div>
 
@@ -261,40 +262,40 @@
             <hr>
 
             <div class="well-sm" style="-ms-border-radius: 0; border-radius: 0;">
-                <p class="pull-left review">2 komentara</p>
+                <p class="pull-left review">@Html.Raw(Model.Car.Reviews.Count) komentara</p>
                 <div class="text-right">
-                    <a class="btn btn-success">Ostavi komentar o iskustvu vožnje</a>
+                    @Html.ActionLink("Ostavi komentar o iskustvu vožnje", "Create", "Reviews", new { carId = Model.Car.Id }, new { @class = "btn btn-success" })
                 </div>
 
-                <hr>
+                @foreach (var item in Model.Car.Reviews)
+                {
+                    <hr>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        Marko Markić
-                        <span class="pull-right">prije 10 dana</span>
-                        <p>Jako kvalitetan auto koji opravdava svoju visoku cijenu. Mala potrošnja goriva ga čini isplativim za iznajmljivanje.</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @for (int i = 0; i < item.Rating; i++)
+                            {
+                                <span class="glyphicon glyphicon-star"></span>
+                            }
+                            @for (int i = 0; i < 5 - item.Rating; i++)
+                            {
+                                <span class="glyphicon glyphicon-star-empty"></span>
+                            }
+                            @if (item.Reservation != null && item.Reservation.Client_Id != null)
+                            {
+                                @Html.ActionLink(((HomeController)this.ViewContext.Controller).UserName(item.Reservation.Client_Id), "Details", "Users", new { id = item.Reservation.Client_Id }, new { @class = "" })
+                                <span class="pull-right">@Html.DisplayFor(modelItem => item.Reservation.DateEnded)</span>
+                            }
+                            else
+                            {
+                                <i>Skriveni korisnik</i>
+                            }
+
+                            <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+                        </div>
                     </div>
-                </div>
-
+                }
                 <hr>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        Ivo Ivić
-                        <span class="pull-right">prije 12 dana</span>
-                        <p>Ovo je već treći put da iznajmljujem ovaj auto i dosad nije razočarao.</p>
-                    </div>
-                </div>
 
                 @*<hr>
 

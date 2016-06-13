@@ -15,6 +15,7 @@ namespace CarRental.EntityFramework
         public int Rating { get; set; }
 
         [Display(Name = "Komentar o iskustvu vožnje", ShortName = "Komentar")]
+        [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
         public int Car_Id { get; set; }

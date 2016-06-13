@@ -219,7 +219,23 @@ namespace CarRentalWebSite.Controllers
         }
 
 
+        /// <summary>
+        /// Used to retrieve user profile information, like FirstName, LastName and City.
+        /// </summary>
+        /// <param name="userId">Reservation.Client_Id</param>
+        /// <returns>ApplicationUser</returns>
+        public ApplicationUser GetUser(String userId)
+        {
+            return UserManager.FindById(userId);
+        }
 
+        public String UserName(String userId)
+        {
+            var u = GetUser(userId);
+            if (string.IsNullOrEmpty(u.FirstName) && string.IsNullOrEmpty(u.LastName))
+                return u.UserName;
+            return u.FirstName + " " + u.LastName;
+        }
 
 
 

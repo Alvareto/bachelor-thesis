@@ -17,9 +17,14 @@ namespace CarRentalWebSite.Models
         public Reservation Reservation { get; set; }
 
         // Number of stars
-        public Int32 AverageRating
+        public double AverageRating
         {
-            get { return Car.Reviews.Any() ? Convert.ToInt32(Car.Reviews.Average(review => review.Rating)) : 0; }
+            get { return Car.Reviews.Any() ? Car.Reviews.Average(review => review.Rating) : 0; }
+        }
+
+        public double RatingStars
+        {
+            get { return Convert.ToInt32(AverageRating); }
         }
 
         public List<CarDetail> Specification { get { return Car.CarDetails.ToList(); } }
