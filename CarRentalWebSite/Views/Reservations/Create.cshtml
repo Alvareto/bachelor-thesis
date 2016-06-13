@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "Create";
+
 }
 
 <h2>Napravi</h2>
@@ -18,7 +19,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DateStarted, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DateStarted, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.DateStarted, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
                 @Html.ValidationMessageFor(model => model.DateStarted, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -26,7 +27,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DateEnded, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DateEnded, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.DateEnded, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
                 @Html.ValidationMessageFor(model => model.DateEnded, "", new { @class = "text-danger" })
             </div>
         </div>

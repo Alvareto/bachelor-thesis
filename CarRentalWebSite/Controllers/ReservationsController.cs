@@ -82,7 +82,7 @@ namespace CarRentalWebSite
         public ActionResult Create(int? officeId)
         {
             ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
-            ViewBag.Cars = db.CarSet.Where(car => car.Office.Id == officeId).ToList();
+            ViewBag.Cars = new List<Car>(); //db.CarSet.Where(car => car.Office.Id == officeId).ToList();
 
             return View();
         }
@@ -114,28 +114,30 @@ namespace CarRentalWebSite
         // GET: Reservations/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Reservation reservation = db.ReservationSet.Find(id);
-            if (reservation == null)
-            {
-                return HttpNotFound();
-            }
-            return View(reservation);
+            return new HttpStatusCodeResult(HttpStatusCode.NotImplemented, "Delete for the Reservation object is not supported. Please cancel the existing Reservation instead.");
+
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Reservation reservation = db.ReservationSet.Find(id);
+            //if (reservation == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(reservation);
         }
 
         // POST: Reservations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Reservation reservation = db.ReservationSet.Find(id);
-            db.ReservationSet.Remove(reservation);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    Reservation reservation = db.ReservationSet.Find(id);
+        //    db.ReservationSet.Remove(reservation);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -163,12 +165,46 @@ namespace CarRentalWebSite
             return RedirectToAction("Details", new { id = reservation.Id });
         }
 
-        public ActionResult Check([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation, int officeId)
+        public ActionResult Check([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation, int? officeId)
         {
+            if (officeId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (reservation.DateStarted.Date > reservation.DateEnded.Date)
+            {
+                ModelState.AddModelError("", "Datum početka rezervacije mora biti prije datuma kraja rezervacije");
+            }
+            if (reservation.DateStarted.Date < DateTime.Today.Date)
+            {
+                ModelState.AddModelError("", "Datum početka rezervacije mora biti u budućnosti");
+            }
             ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
-            ViewBag.Cars = db.CarSet.Where(car => car.Office.Id == officeId).ToList();
+            ViewBag.Cars = //db.CarSet.Where(car => car.Office.Id == officeId).ToList();
+
+            FilterCars(reservation, db.CarSet.Where(car => car.Office.Id == officeId).ToList()).ToList();
 
             return View("Create", reservation);
+        }
+
+        private HashSet<Car> FilterCars(Reservation reservation, List<Car> cars)
+        {
+            // cars -> reservation dates overlap ? -> return if not
+            HashSet<Car> set = new HashSet<Car>();
+            //List<Car> list = new List<Car>();
+            foreach (Car car in cars)
+                foreach (var r in car.Reservations.Where(res => !res.Canceled))
+                {
+                    if (!DateRangesOverlap(reservation.DateStarted, reservation.DateEnded, r.DateStarted, r.DateEnded))
+                        set.Add(car);
+                }
+            return set;
+        }
+
+        private bool DateRangesOverlap(DateTime aStart, DateTime aEnd, DateTime bStart, DateTime bEnd)
+        {
+            //bool overlap = a.start < b.end && b.start < a.end;
+            return aStart.Date <= bEnd.Date && bStart.Date <= aEnd.Date;
         }
 
         /// <summary>
@@ -181,6 +217,13 @@ namespace CarRentalWebSite
             return UserManager.FindById(userId);
         }
 
+        public String UserName(String userId)
+        {
+            var u = GetUser(userId);
+            if (string.IsNullOrEmpty(u.FirstName) && string.IsNullOrEmpty(u.LastName))
+                return u.UserName;
+            return u.FirstName + " " + u.LastName;
+        }
 
         public ActionResult Cancel(int? id)
         {

@@ -11,6 +11,17 @@
 </p>
 <table class="table">
     <tr>
+        <th>@Html.DisplayNameFor(model => model.Client_Id)</th>
+
+        <th>Ukupno dana</th>
+
+        <th>@Html.DisplayNameFor(model => model.Car.Price)</th>
+
+        <th>Ukupna cijena</th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Car)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.DateStarted)
         </th>
@@ -20,20 +31,34 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateStarted)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateEnded)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Otkaži", "Cancel", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink(((ReservationsController)this.ViewContext.Controller).UserName(item.Client_Id), "Details", "Users", new { id = item.Client_Id }, new { @class = "" })</td>
+
+            <td>
+                @Html.Raw((item.DateEnded - item.DateStarted).Days + " dana")
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Car.GetReservationPrice(item.DateStarted))
+            </td>
+            <td>
+                @string.Format("{0:C}", (item.DateEnded - item.DateStarted).Days * item.Car.GetReservationPrice(item.DateStarted))
+            </td>
+
+            <td>@Html.ActionLink(item.Car.Manufacturer + " " + item.Car.Model, "Details", "Cars", new { id = item.Car.Id }, new { @class = "" })</td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.DateStarted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateEnded)
+            </td>
+            <td>
+                @Html.ActionLink("Detalji", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Otkaži", "Cancel", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
