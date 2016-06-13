@@ -11,7 +11,7 @@ using CarRentalWebSite.Models;
 
 namespace CarRentalWebSite
 {
-    public class ReviewSetController : Controller
+    public class ReviewsController : Controller
     {
         private CarRentalWebSiteContext db = new CarRentalWebSiteContext();
 

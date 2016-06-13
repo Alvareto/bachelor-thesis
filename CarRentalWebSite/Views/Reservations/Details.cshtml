@@ -13,7 +13,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.DateStarted)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.DateStarted)
         </dd>
@@ -21,14 +20,87 @@
         <dt>
             @Html.DisplayNameFor(model => model.DateEnded)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.DateEnded)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Car)
+        </dt>
+        <dd>
+            @*@Html.Raw(Model.Car.Manufacturer + " " + Model.Car.Model)*@
+            @Html.ActionLink(Model.Car.Manufacturer + " " + Model.Car.Model, "Details", "Cars", new { id = Model.Car.Id }, new { @class = "" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Client_Id)
+        </dt>
+        <dd>
+            @Html.ActionLink((string)ViewBag.UserName, "Details", "Users", new { id = Model.Client_Id }, new { @class = "" })
+            @*@Html.Raw(ViewBag.UserName)*@
+        </dd>
+
+
+        <dt>Ukupno dana</dt>
+        <dd>
+            @Html.Raw((Model.DateEnded - Model.DateStarted).Days + " dana")
+        </dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Car.Price)</dt>
+        <dd>
+            @string.Format("{0:C}", Model.Car.GetReservationPrice(Model.DateStarted))
+        </dd>
+
+        <dt>Ukupna cijena</dt>
+        <dd>
+            @string.Format("{0:C}", (Model.DateEnded - Model.DateStarted).Days * Model.Car.GetReservationPrice(Model.DateStarted))
         </dd>
 
     </dl>
 </div>
 <p>
-    @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
+        @Html.ActionLink("Nazad na popis", "Index")
+    </p>
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Rating)*@
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Comment)*@
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Car_Id)*@
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Reservation_Id)*@
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.ReviewSet)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Car_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reservation_Id)
+            </td>
+            @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>*@
+        </tr>
+    }
+
+</table>

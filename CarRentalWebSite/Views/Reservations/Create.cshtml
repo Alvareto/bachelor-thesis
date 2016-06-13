@@ -84,7 +84,7 @@
                     @string.Format("{0:C}", (Model.DateEnded - Model.DateStarted).Days * car.GetReservationPrice(Model.DateStarted))
                 </td>
                 <td>
-                    @Html.ActionLink("Rezerviraj", "Reserve", new { carId = car.Id, started = Model.DateStarted, ended = Model.DateEnded }, new { @class = "btn btn-success" })
+                    @*@Html.ActionLink("Rezerviraj", "Reserve", new { carId = car.Id, started = Model.DateStarted, ended = Model.DateEnded }, new { @class = "btn btn-success" })*@
                     <input type="submit" value="Rezerviraj" class="btn btn-success" />
                 </td>
             </tr>

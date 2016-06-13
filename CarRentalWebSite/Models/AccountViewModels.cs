@@ -55,10 +55,10 @@ namespace CarRentalWebSite.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Lozinka")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Zapamti me?")]
         public bool RememberMe { get; set; }
     }
 
@@ -70,15 +70,34 @@ namespace CarRentalWebSite.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} mora imati bar {2} znakova.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Lozinka")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Potvrdi lozinku")]
+        [Compare("Password", ErrorMessage = "Unesene lozinke se ne poklapaju.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Ime")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Prezime")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Naselje")]
+        public string City { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Broj telefona")]
+        public string PhoneNumber { get; set; }
+
+        [Display(Name = "Korisničko ime")]
+        public string UserName { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -91,11 +110,11 @@ namespace CarRentalWebSite.Models
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Lozinka")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
+        [Display(Name = "Potvrdi lozinku")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 

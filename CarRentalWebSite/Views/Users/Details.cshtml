@@ -1,0 +1,114 @@
+﻿@using CarRental.EntityFramework
+@model CarRentalWebSite.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Profil";
+}
+
+<h2>Profil</h2>
+
+<div>
+    <h4>korisnika</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @*@Html.DisplayFor(model => model.City)*@
+            @Html.ActionLink(Model.City, "Details", "Offices", new { city = Model.City }, new { @class = "" })
+
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            Broj telefona
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            Korisničko ime
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            Administrator
+        </dt>
+
+        <dd>
+            @Html.CheckBox("isAdmin", (Boolean)ViewBag.IsAdmin, new { disabled = "disabled" })
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Uredi", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Nazad na popis", "Index")
+</p>
+
+<h3>Rezervacije</h3>
+<table class="table">
+    <tr>
+        <th>
+            @Html.Raw("Početak")
+        </th>
+        <th>
+            @Html.Raw("Kraj")
+        </th>
+        <th>
+            @Html.Raw("Automobil")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in (List<Reservation>)ViewBag.Reservations)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateStarted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateEnded)
+            </td>
+            <td>
+                @Html.ActionLink(item.Car.Manufacturer + " " + item.Car.Model, "Details", "Cars", new { id = item.Car.Id }, new { @class = "" })
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

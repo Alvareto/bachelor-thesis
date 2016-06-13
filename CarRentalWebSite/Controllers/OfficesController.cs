@@ -25,13 +25,22 @@ namespace CarRentalWebSite
 
 
         // GET: Offices/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string city)
         {
-            if (id == null)
+            Office office;
+            if (id != null)
+            {
+                office = db.OfficeSet.Find(id);
+            }
+            else if (!string.IsNullOrEmpty(city))
+            {
+                office = db.OfficeSet.SingleOrDefault(o => o.City == city);
+            }
+            else //if (id == null && string.IsNullOrEmpty(city))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Office office = db.OfficeSet.Find(id);
+
             if (office == null)
             {
                 return HttpNotFound();

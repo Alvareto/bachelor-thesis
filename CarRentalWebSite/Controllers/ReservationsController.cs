@@ -40,11 +40,20 @@ namespace CarRentalWebSite
             }
         }
 
+        /// <summary>
+        /// This action is used to display all Reservations if User has Administrator role and just personal Reservations if not.
+        /// </summary>
+        /// <returns></returns>
         // GET: Reservations
         [Authorize(Roles = CustomRoles.User + "," + CustomRoles.Administrator)]
         public ActionResult Index()
         {
-            return View(db.ReservationSet.ToList());
+            var reservations = db.ReservationSet.Where(reservation => !reservation.Canceled).ToList();
+            if (User.IsInRole(CustomRoles.User))
+            {
+                reservations = reservations.Where(reservation => reservation.Client_Id == User.Identity.GetUserId()).ToList();
+            }
+            return View(reservations);
         }
 
         // GET: Reservations/Details/5
@@ -59,11 +68,12 @@ namespace CarRentalWebSite
             {
                 return HttpNotFound();
             }
-            ViewBag.User = GetUser(reservation.Client_Id);
-            if (ViewBag.User == null)
+            var u = GetUser(reservation.Client_Id);
+            if (u == null)
             {
                 return HttpNotFound("Reservation user doesn't exist.");
             }
+            ViewBag.UserName = u.FirstName + " " + u.LastName;
 
             return View(reservation);
         }
@@ -86,6 +96,7 @@ namespace CarRentalWebSite
         {
             if (ModelState.IsValid)
             {
+                reservation.Canceled = false;
                 db.ReservationSet.Add(reservation);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -98,24 +109,6 @@ namespace CarRentalWebSite
         public ActionResult Edit(int? id)
         {
             return new HttpStatusCodeResult(HttpStatusCode.NotImplemented, "Edit for the Reservation object is not supported. Please cancel the existing Reservation and then create a new one.");
-        }
-
-        // POST: Reservations/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation)
-        {
-            return new HttpStatusCodeResult(HttpStatusCode.NotImplemented, "Edit for the Reservation object is not supported. Please cancel the existing Reservation and then create a new one.");
-
-            if (ModelState.IsValid)
-            {
-                db.Entry(reservation).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(reservation);
         }
 
         // GET: Reservations/Delete/5
@@ -160,7 +153,8 @@ namespace CarRentalWebSite
                 Client_Id = User.Identity.GetUserId(),
                 DateStarted = started,
                 DateEnded = ended,
-                Car = db.CarSet.Find(carId)
+                Car = db.CarSet.Find(carId),
+                Canceled = false
             };
             //var o = (reservation.DateEnded - reservation.DateStarted).Days;
             db.ReservationSet.Add(reservation);
@@ -180,13 +174,32 @@ namespace CarRentalWebSite
         /// <summary>
         /// Used to retrieve user profile information, like FirstName, LastName and City.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <param name="userId">Reservation.Client_Id</param>
+        /// <returns>ApplicationUser</returns>
         public ApplicationUser GetUser(String userId)
         {
             return UserManager.FindById(userId);
         }
 
 
+        public ActionResult Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Reservation reservation = db.ReservationSet.Find(id);
+            if (reservation == null)
+            {
+                return HttpNotFound();
+            }
+
+            reservation.Canceled = true;
+
+            db.Entry(reservation).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }

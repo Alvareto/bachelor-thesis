@@ -1,3 +1,4 @@
+using CarRental.EntityFramework;
 using CarRentalWebSite.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -13,7 +14,7 @@ namespace CarRentalWebSite.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "CarRentalWebSite.Models.ApplicationDbContext";
         }
 
@@ -33,18 +34,21 @@ namespace CarRentalWebSite.Migrations
             //
 
             var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            string[] roleNames = { "Admin", "Client" };
-            IdentityResult roleResult;
+            string[] roleNames = { CustomRoles.Administrator, CustomRoles.User};
+            
             foreach (var roleName in roleNames)
             {
                 if (!RoleManager.RoleExists(roleName))
                 {
-                    roleResult = RoleManager.Create(new IdentityRole(roleName));
+                    RoleManager.Create(new IdentityRole(roleName));
                 } 
             }
 
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            UserManager.AddToRole("51957243-baab-4e5e-80a8-86b1ad28b4c7", "Admin");
+            // Create User
+            //var user = new ApplicationUser { UserName = "admin", Email = "admin@rentacar.com" };
+            //UserManager.Create(user, "admin");
+            //UserManager.AddToRole(user.Id, "Admin");
            
         }
     }
