@@ -196,11 +196,11 @@ namespace CarRentalWebSite
             HashSet<Car> set = new HashSet<Car>();
             //List<Car> list = new List<Car>();
             foreach (Car car in cars)
-                foreach (var r in car.Reservations.Where(res => !res.Canceled))
-                {
-                    if (!DateRangesOverlap(reservation.DateStarted, reservation.DateEnded, r.DateStarted, r.DateEnded))
-                        set.Add(car);
-                }
+            {
+                bool available = car.Reservations.Where(res => !res.Canceled)
+                                    .All(r => !DateRangesOverlap(reservation.DateStarted, reservation.DateEnded, r.DateStarted, r.DateEnded));
+                if (available) set.Add(car);
+            }
             return set;
         }
 

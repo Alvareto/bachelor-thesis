@@ -1,4 +1,7 @@
-﻿@model CarRentalWebSite.Models.CarDetailsViewModel
+﻿@using System.Web.Mvc.Html
+@using CarRental.EntityFramework
+@using CarRentalWebSite.Helpers
+@model CarRentalWebSite.Models.CarDetailsViewModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -50,7 +53,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-7">
-                                <h4 href="#">Volkswagen Golf IV</h4>
+                                <h4 href="#">@Html.DisplayFor(model => model.Car.Manufacturer) @Html.DisplayFor(model => model.Car.Model)</h4>
                             </div>
                             <div class="col-md-5">
 
@@ -61,7 +64,7 @@
                                         <span class="glyphicon glyphicon-star"></span>
                                         <span class="glyphicon glyphicon-star"></span>
                                         <span class="glyphicon glyphicon-star-empty"></span>
-                                        4.0
+                                        @Html.DisplayFor(model => model.AverageRating)
                                     </p>
                                 </div>
 
@@ -71,106 +74,113 @@
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <dl class="dl-horizontal">
-                                    <dt>
-                                        Snaga motora
-                                    </dt>
-                                    <dd>
-                                        110 KS
-                                    </dd>
-                                    <dt>
-                                        Max brzina
-                                    </dt>
-                                    <dd>
-                                        160 km/h
-                                    </dd>
-                                </dl>
-                            </div>
-                            <div class="col-md-6">
-                                <dl class="dl-horizontal">
-                                    <dt>
-                                        Spremnik goriva
-                                    </dt>
-                                    <dd>
-                                        40 L
-                                    </dd>
-                                    <dt>
-                                        Potrošnja goriva
-                                    </dt>
-                                    <dd>
-                                        5,3 L/100km
-                                    </dd>
+                                    @foreach (var item in Model.Specification)
+                                    {
+                                        <dt>
+                                            @Html.DisplayFor(modelItem => item.Type.GetAttributeDescription())
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(modelItem => item.Value)
+                                        </dd>
+                                    }
                                 </dl>
                             </div>
                         </div>
                         <hr />
                         <div class="row">
-                            @using (Html.BeginForm())
+                            @using (Html.BeginForm("Check", "Home", FormMethod.Get))
                             {
                                 @Html.AntiForgeryToken()
 
                                 <div class="form-horizontal">
-
-                                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                                    <h4>Rezervaciju</h4>
+                                    <hr />
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     <div class="form-group">
-                                        <label class="control-label col-md-2">Od</label>
+                                        @Html.LabelFor(model => model.Reservation.DateStarted, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-10">
-                                            <input class="form-control" type="date" />
+                                            @Html.EditorFor(model => model.Reservation.DateStarted, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
+                                            @Html.ValidationMessageFor(model => model.Reservation.DateStarted, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-2">Do</label>
+                                        @Html.LabelFor(model => model.Reservation.DateEnded, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-10">
-                                            <input class="form-control" type="date" />
+                                            @Html.EditorFor(model => model.Reservation.DateEnded, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
+                                            @Html.ValidationMessageFor(model => model.Reservation.DateEnded, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
+
+                                    @Html.Hidden("carId", Model.Id)
 
                                     <div class="form-group">
                                         <div class="col-md-offset-2 col-md-10">
-                                            <input type="submit" value="Provjeri dostupnost" class="btn" />
+                                            <input type="submit" value="Provjeri dostupnost" class="btn btn-info" />
                                         </div>
                                     </div>
                                 </div>
                             }
 
                             <hr />
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="text-success">
-                                        Automobil je <strong>dostupan</strong> u traženo vrijeme.
-                                    </p>
-                                    <p>
-                                        Želite li napraviti rezervaciju?
-                                    </p>
-                                </div>
-                                <div class="col-md-6 pull-right">
-                                    <dl class="dl-horizontal">
-                                        <dt>
-                                            Cijena
-                                        </dt>
-                                        <dd>
-                                            832,64 HRK
-                                        </dd>
-                                        <dt>
-                                            Gorivo
-                                        </dt>
-                                        <dd>
-                                            200,00 HRK
-                                        </dd>
-                                        <hr />
-                                        <dt>
-                                            Ukupno
-                                        </dt>
-                                        <dd>
-                                            <b>1032,64 HRK</b>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                            <button class="btn btn-success pull-right">Rezerviraj</button>
+                            @if ((Boolean)ViewBag.Available)
+                            {
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="text-success">
+                                            Automobil je <strong>dostupan</strong> u traženo vrijeme.
+                                        </p>
+                                        <p>
+                                            Želite li napraviti rezervaciju?
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 pull-right">
+                                        @using (Html.BeginForm("Reserve", "Home", new { carId = Model.Id, started = Model.Reservation.DateStarted, ended = Model.Reservation.DateEnded }, FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <dl class="dl-horizontal">
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.Car.Price)
+                                                </dt>
+                                                <dd>
+                                                    @string.Format("{0:C}", Model.Car.GetReservationPrice(Model.Reservation.DateStarted))
+                                                </dd>
+                                                <dt>
+                                                    Broj dana
+                                                </dt>
+                                                <dd>
+                                                    @Html.Raw((Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days + " dana")
+                                                </dd>
 
+                                                <hr />
+                                                <dt>
+                                                    Ukupno
+                                                </dt>
+                                                <dd>
+                                                    <b>@string.Format("{0:C}", (Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days * Model.Car.GetReservationPrice(Model.Reservation.DateStarted))</b>
+                                                </dd>
+                                            </dl>
+
+                                            <input type="submit" value="Rezerviraj" class="btn btn-success" />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p class="text-danger">
+                                            Automobil <strong>nije dostupan</strong> u traženo vrijeme.
+                                        </p>
+                                        <p>
+                                            Pokušajte promijeniti termin rezervacije.
+                                        </p>
+                                    </div>
+                                </div>
+                            }
 
                         </div>
                     </div>

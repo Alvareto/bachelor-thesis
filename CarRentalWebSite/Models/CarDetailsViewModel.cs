@@ -11,6 +11,8 @@ namespace CarRentalWebSite.Models
 
         public Car Car { get; set; }
 
+        public Reservation Reservation { get; set; }
+
         // Number of stars
         public Int32 AverageRating { get; set; }
         public String CarManufacturer { get; set; }
@@ -38,6 +40,17 @@ namespace CarRentalWebSite.Models
 
         public CarDetailsViewModel(Car car)
         {
+            Init(car);
+        }
+
+        public CarDetailsViewModel(Car car, Reservation reservation)
+        {
+            Init(car);
+            this.Reservation = reservation;
+        }
+
+        private void Init(Car car)
+        {
             this.Car = car;
             this.Id = this.Car.Id;
 
@@ -46,8 +59,7 @@ namespace CarRentalWebSite.Models
             this.Specification = car.CarDetails.ToList();
 
             var reviews = this.Car.Reviews;
-            if (reviews.Any())
-                this.AverageRating = Convert.ToInt32(reviews.Average(review => review.Rating));
+            this.AverageRating = reviews.Any() ? Convert.ToInt32(reviews.Average(review => review.Rating)) : 0;
             foreach (var review in this.Car.Reviews.Where(review => !string.IsNullOrEmpty(review.Comment)))
             {
                 this.CarComments.Add(new Comment(null, review.Comment));
