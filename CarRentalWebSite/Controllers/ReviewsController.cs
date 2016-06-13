@@ -37,7 +37,7 @@ namespace CarRentalWebSite
         }
 
         // GET: Reviews/Create
-        public ActionResult Create()
+        public ActionResult Create(int reservationId)
         {
             return View();
         }

@@ -48,6 +48,7 @@ namespace CarRentalWebSite.Controllers
             if (carId != null)
             {
                 car = db.CarSet.Find(carId);
+                officeId = car.Office_Id;
             }
             else
             {
@@ -71,8 +72,8 @@ namespace CarRentalWebSite.Controllers
 
             var model = new CarDetailsViewModel(car, new Reservation())
             {
-                NextCar = nextCarId != 0 ? db.CarSet.Find(nextCarId) : null,
-                PrevCar = prevCarId != 0 ? db.CarSet.Find(prevCarId) : null,
+                NextCar = nextCar,
+                PrevCar = prevCar,
                 IsAvailable = ViewBag.Available = false
             };
 
@@ -82,38 +83,33 @@ namespace CarRentalWebSite.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Check(DateTime DateStarted, DateTime DateEnded, int carId, int? officeId)
+
+        public ActionResult Check([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation, int? officeId, int? carId)
         {
-            if (DateStarted.Date > DateEnded.Date)
+            if (officeId == null || reservation == null || carId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (reservation.DateStarted.Date > reservation.DateEnded.Date)
             {
                 ModelState.AddModelError("", "Datum početka rezervacije mora biti prije datuma kraja rezervacije");
             }
-            if (DateStarted.Date < DateTime.Today.Date)
+            if (reservation.DateStarted.Date < DateTime.Today.Date)
             {
                 ModelState.AddModelError("", "Datum početka rezervacije mora biti u budućnosti");
             }
+            ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
 
             Car car = db.CarSet.Find(carId);
-            Reservation reservation = new Reservation()
-            {
-                DateStarted = DateStarted,
-                DateEnded = DateEnded,
-                Canceled = false,
-                Car = car,
-                Client_Id = User.Identity.GetUserId()
-            };
-
-            SetNextAndPrevCars(carId);
+            SetNextAndPrevCars(carId.Value);
             var model = new CarDetailsViewModel(car, reservation)
             {
-                NextCar = nextCarId != 0 ? db.CarSet.Find(nextCarId) : null,
-                PrevCar = prevCarId != 0 ? db.CarSet.Find(prevCarId) : null,
+                NextCar = nextCar,
+                PrevCar = prevCar,
                 IsAvailable = Available(reservation, car)
             };
             ViewBag.Available = model.IsAvailable; // = Available(model.Reservation, model.Car);
-
-            ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
+            //if (!ModelState.IsValid) ViewBag.Available = false;
 
             return View("Index", model);
         }
@@ -173,10 +169,10 @@ namespace CarRentalWebSite.Controllers
         }
 
 
-        private int prevCarId = 0;
+        private Car prevCar;
 
 
-        private int nextCarId = 0;
+        private Car nextCar;
 
         /// <summary>
         /// Sets <c>IDs</c> for next and previous Car entries.
@@ -198,9 +194,8 @@ namespace CarRentalWebSite.Controllers
             //    return true;
             //}
 
-            var carId = db.CarSet.Where(n => n.Price > 0)
-                                  .OrderBy(n => n.Id)
-                                  .Select(n => new { n.Id }).ToArray();
+            var carId = db.CarSet.Where(n => n.Office_Id == car.Office_Id)
+                                  .OrderBy(n => n.Id).ToArray();
 
             for (int i = 0, N = carId.Length; i < N; i++)
             {
@@ -208,12 +203,12 @@ namespace CarRentalWebSite.Controllers
                 {
                     if (i > 0)
                     {
-                        nextCarId = carId[i - 1].Id;
+                        nextCar = carId[i - 1];
                     }
 
                     if (i < N - 1)
                     {
-                        prevCarId = carId[i + 1].Id;
+                        prevCar = carId[i + 1];
                     }
 
                     break;

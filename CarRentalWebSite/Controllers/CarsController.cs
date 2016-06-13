@@ -102,7 +102,7 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Manufacturer,Model,Price")] Car car)
+        public ActionResult Edit([Bind(Include = "Id,Manufacturer,Model,Price,Office_Id")] Car car)
         {
             if (ModelState.IsValid)
             {
