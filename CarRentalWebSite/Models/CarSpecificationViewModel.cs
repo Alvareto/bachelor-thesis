@@ -10,36 +10,55 @@ namespace CarRentalWebSite.Models
         public CarDetail GasTankCapacity { get; set; }
         public CarDetail EnginePower { get; set; }
         public CarDetail FuelConsumption { get; set; }
-
-
-
-
-        public int Id { get; set; }
-
         public Car Car { get; set; }
-
-        public Office Office { get; set; }
-
-        public List<CarDetail> Specification { get; set; }
-
-        public CarSpecificationViewModel(Car car, Office o)
-        {
-            this.Car = car;
-
-            this.Id = this.Car.Id;
-            this.Office = o;
-            this.Specification = car.CarDetails.ToList();
-
-        }
-
         public CarSpecificationViewModel(Car car)
         {
-            throw new NotImplementedException();
-        }
 
+            GasTankCapacity = car.CarDetails.Any(o => o.Type == CarDetailType.GasTankCapacity) ?
+                car.CarDetails.Single(detail => detail.Type == CarDetailType.GasTankCapacity)
+                : new CarDetail()
+                {
+                    Car = null,
+                    Type = CarDetailType.GasTankCapacity,
+                    Value = ""
+                };
+            EnginePower = car.CarDetails.Any(o => o.Type == CarDetailType.EnginePower) ?
+                car.CarDetails.Single(detail => detail.Type == CarDetailType.EnginePower)
+                : new CarDetail()
+                {
+                    Car = null,
+                    Type = CarDetailType.EnginePower,
+                    Value = ""
+                };
+            FuelConsumption = car.CarDetails.Any(o => o.Type == CarDetailType.FuelConsumption) ?
+                car.CarDetails.Single(detail => detail.Type == CarDetailType.FuelConsumption)
+                : new CarDetail()
+                {
+                    Car = null,
+                    Type = CarDetailType.FuelConsumption,
+                    Value = ""
+                };
+        }
         public CarSpecificationViewModel()
         {
-            throw new NotImplementedException();
+            GasTankCapacity = new CarDetail()
+            {
+                Car = null,
+                Type = CarDetailType.GasTankCapacity,
+                Value = ""
+            };
+            EnginePower = new CarDetail()
+            {
+                Car = null,
+                Type = CarDetailType.EnginePower,
+                Value = ""
+            };
+            FuelConsumption = new CarDetail()
+            {
+                Car = null,
+                Type = CarDetailType.FuelConsumption,
+                Value = ""
+            };
         }
     }
 }

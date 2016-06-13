@@ -40,40 +40,82 @@ namespace CarRentalWebSite.Controllers
 
 
 
-        public ActionResult Index(int? id)
+        public ActionResult Index(int? officeId, int? carId)
         {
-            if (id == null)
-            {
+            Car car;
 
+            // carId != null && office whatever => car
+            if (carId != null)
+            {
+                car = db.CarSet.Find(carId);
             }
-            ViewBag.Available = false;
-            return View(new CarDetailsViewModel(db.CarSet.FirstOrDefault()));
+            else
+            {
+                // carId == null && officeId == null  => first car in first office
+                if (officeId == null)
+                {
+                    var officeFirst = db.OfficeSet.FirstOrDefault();
+                    if (officeFirst != null)
+                        officeId = officeFirst.Id;
+                }
+
+                // carId == null && officeId != null => first car in office
+                car = db.CarSet.FirstOrDefault(o => o.Office.Id == officeId);
+            }
+
+            ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
+
+            // previousCar, nextCar
+
+            SetNextAndPrevCars(car.Id);
+
+            var model = new CarDetailsViewModel(car, new Reservation())
+            {
+                NextCar = nextCarId != 0 ? db.CarSet.Find(nextCarId) : null,
+                PrevCar = prevCarId != 0 ? db.CarSet.Find(prevCarId) : null,
+                IsAvailable = ViewBag.Available = false
+            };
+
+            //ViewBag.Available = false;
+
+
+            return View(model);
         }
 
-        public ActionResult Check([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation, int? carId)
+        [HttpPost]
+        public ActionResult Check(DateTime DateStarted, DateTime DateEnded, int carId, int? officeId)
         {
-            if (carId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Car is not set");
-            }
-            Car car = db.CarSet.Find(carId);
-
-            if (reservation == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Reservation is not set");
-            }
-            if (reservation.DateStarted.Date > reservation.DateEnded.Date)
+            if (DateStarted.Date > DateEnded.Date)
             {
                 ModelState.AddModelError("", "Datum početka rezervacije mora biti prije datuma kraja rezervacije");
             }
-            if (reservation.DateStarted.Date < DateTime.Today.Date)
+            if (DateStarted.Date < DateTime.Today.Date)
             {
                 ModelState.AddModelError("", "Datum početka rezervacije mora biti u budućnosti");
             }
 
-            ViewBag.Available = Available(reservation, car); ;
+            Car car = db.CarSet.Find(carId);
+            Reservation reservation = new Reservation()
+            {
+                DateStarted = DateStarted,
+                DateEnded = DateEnded,
+                Canceled = false,
+                Car = car,
+                Client_Id = User.Identity.GetUserId()
+            };
 
-            return View("Index", new CarDetailsViewModel(car, reservation));
+            SetNextAndPrevCars(carId);
+            var model = new CarDetailsViewModel(car, reservation)
+            {
+                NextCar = nextCarId != 0 ? db.CarSet.Find(nextCarId) : null,
+                PrevCar = prevCarId != 0 ? db.CarSet.Find(prevCarId) : null,
+                IsAvailable = Available(reservation, car)
+            };
+            ViewBag.Available = model.IsAvailable; // = Available(model.Reservation, model.Car);
+
+            ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
+
+            return View("Index", model);
         }
 
 
@@ -119,7 +161,67 @@ namespace CarRentalWebSite.Controllers
 
 
 
+        public ActionResult Cancel(int carId)
+        {
+            ViewBag.Available = false;
+            return RedirectToAction("Index", new { carId = carId });
+        }
 
+        public ActionResult ChangeCity(int officeId)
+        {
+            return RedirectToAction("Index", new { officeId });
+        }
+
+
+        private int prevCarId = 0;
+
+
+        private int nextCarId = 0;
+
+        /// <summary>
+        /// Sets <c>IDs</c> for next and previous Car entries.
+        /// </summary>
+        /// <param name="id">ID of current Car entry.</param>
+        private bool SetNextAndPrevCars(int id)
+        {
+            var car = db.CarSet.Find(id);
+
+            // News doesn't exists.
+            if (car == null)
+            {
+                return false;
+            }
+
+            //// Expired news - show Details without PREV and NEXT
+            //if (car.DatumIsteka < DateTime.Now || isLoggedIn)
+            //{
+            //    return true;
+            //}
+
+            var carId = db.CarSet.Where(n => n.Price > 0)
+                                  .OrderBy(n => n.Id)
+                                  .Select(n => new { n.Id }).ToArray();
+
+            for (int i = 0, N = carId.Length; i < N; i++)
+            {
+                if (carId[i].Id == id)
+                {
+                    if (i > 0)
+                    {
+                        nextCarId = carId[i - 1].Id;
+                    }
+
+                    if (i < N - 1)
+                    {
+                        prevCarId = carId[i + 1].Id;
+                    }
+
+                    break;
+                }
+            }
+
+            return true;
+        }
 
 
 
@@ -156,5 +258,7 @@ namespace CarRentalWebSite.Controllers
 
             return View();
         }
+
+
     }
 }

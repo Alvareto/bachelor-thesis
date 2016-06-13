@@ -1,12 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarRental.EntityFramework
 {
     public enum CarDetailType
     {
-        [Display(Name="Kapacitet spremnika za gorivo")]
-        GasTankCapacity, 
-        EnginePower, 
+        [Description("Kapacitet spremnika za gorivo (L)")]
+        GasTankCapacity,
+        [Description("Snaga motora (KS)")]
+        EnginePower,
+        [Description("Potrošnja goriva (L/100km)")]
         FuelConsumption
     }
 }
