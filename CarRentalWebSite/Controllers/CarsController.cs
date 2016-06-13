@@ -147,5 +147,12 @@ namespace CarRentalWebSite
             }
             base.Dispose(disposing);
         }
+
+        private bool DateRangesOverlap(DateTime aStart, DateTime aEnd, DateTime bStart, DateTime bEnd)
+        {
+            //bool overlap = a.start < b.end && b.start < a.end;
+            return aStart.Date <= bEnd.Date && bStart.Date <= aEnd.Date;
+        }
+
     }
 }

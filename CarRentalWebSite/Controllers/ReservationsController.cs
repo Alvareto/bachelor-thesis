@@ -83,6 +83,7 @@ namespace CarRentalWebSite
         {
             ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
             ViewBag.Cars = new List<Car>(); //db.CarSet.Where(car => car.Office.Id == officeId).ToList();
+            ViewBag.Found = false;
 
             return View();
         }
@@ -90,20 +91,20 @@ namespace CarRentalWebSite
         // POST: Reservations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation)
-        {
-            if (ModelState.IsValid)
-            {
-                reservation.Canceled = false;
-                db.ReservationSet.Add(reservation);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        reservation.Canceled = false;
+        //        db.ReservationSet.Add(reservation);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-            return View(reservation);
-        }
+        //    return View(reservation);
+        //}
 
         // GET: Reservations/Edit/5
         public ActionResult Edit(int? id)
@@ -148,6 +149,8 @@ namespace CarRentalWebSite
             base.Dispose(disposing);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Reserve(int carId, DateTime started, DateTime ended)
         {
             Reservation reservation = new Reservation
@@ -167,7 +170,7 @@ namespace CarRentalWebSite
 
         public ActionResult Check([Bind(Include = "Id,DateStarted,DateEnded")] Reservation reservation, int? officeId)
         {
-            if (officeId == null)
+            if (officeId == null || reservation == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -180,10 +183,10 @@ namespace CarRentalWebSite
                 ModelState.AddModelError("", "Datum početka rezervacije mora biti u budućnosti");
             }
             ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
-            ViewBag.Cars = //db.CarSet.Where(car => car.Office.Id == officeId).ToList();
 
-            FilterCars(reservation, db.CarSet.Where(car => car.Office.Id == officeId).ToList()).ToList();
-
+            var cars = FilterCars(reservation, db.CarSet.Where(car => car.Office.Id == officeId).ToList()).ToList();//db.CarSet.Where(car => car.Office.Id == officeId).ToList();
+            ViewBag.Cars = cars;
+            ViewBag.Found = cars.Any();
             return View("Create", reservation);
         }
 

@@ -39,19 +39,18 @@ namespace CarRentalWebSite.Models
         public CarDetailsViewModel(Car car)
         {
             this.Car = car;
-
             this.Id = this.Car.Id;
 
             this.CarManufacturer = this.Car.Manufacturer;
             this.CarModel = this.Car.Model;
-            this.AverageRating = Convert.ToInt32(this.Car.Reviews.Average(review => review.Rating));
-
             this.Specification = car.CarDetails.ToList();
 
+            var reviews = this.Car.Reviews;
+            if (reviews.Any())
+                this.AverageRating = Convert.ToInt32(reviews.Average(review => review.Rating));
             foreach (var review in this.Car.Reviews.Where(review => !string.IsNullOrEmpty(review.Comment)))
             {
-                //var name = review.Reservation.Client.FirstName + " " + review.Reservation.Client.LastName;
-                //this.CarComments.Add(new Comment (name, review.Comment));
+                this.CarComments.Add(new Comment(null, review.Comment));
             }
         }
     }

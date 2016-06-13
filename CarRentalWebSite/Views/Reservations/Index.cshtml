@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<CarRental.EntityFramework.Reservation>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Popis rezervacija";
 }
 
-<h2>Index</h2>
+<h2>Popis rezervacija</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Napravi novu rezervaciju", "Create")
 </p>
 <table class="table">
     <tr>
@@ -55,8 +55,8 @@
                 @Html.DisplayFor(modelItem => item.DateEnded)
             </td>
             <td>
-                @Html.ActionLink("Detalji", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Otkaži", "Cancel", new { id = item.Id })
+                @Html.ActionLink("Detalji", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Otkaži", "Cancel", new { id = item.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }
