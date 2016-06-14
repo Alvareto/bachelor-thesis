@@ -14,60 +14,8 @@ namespace CarRentalWebSite
     {
         private CarRentalWebSiteContext db = new CarRentalWebSiteContext();
 
-        // GET: CarDetails
-        public ActionResult Index()
-        {
-            return View(db.CarDetailSet.ToList());
-        }
-
-        // GET: CarDetails/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CarDetail carDetail = db.CarDetailSet.Find(id);
-            if (carDetail == null)
-            {
-                return HttpNotFound();
-            }
-            return View(carDetail);
-        }
-
-        // GET: CarDetails/Create
-        public ActionResult Create(int? carId)
-        {
-            var carDetail = new CarDetail();
-            if (carId.HasValue)
-            {
-                var car = db.CarSet.Find(carId.Value);
-                carDetail.Car = car;
-            }
-            return View(carDetail);
-        }
-
-        // POST: CarDetails/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Type,Value")] CarDetail carDetail, int carId)
-        {
-            carDetail.Car = db.CarSet.Find(carId);
-            if (ModelState.IsValid)
-            {
-                db.CarDetailSet.Add(carDetail);
-                db.SaveChanges();
-                return RedirectToAction("Details", "Cars", new { id = carId });
-            }
-
-            return View(carDetail);
-        }
-
-
-        // GET: CarDetails/CreateAll
-        public ActionResult CreateAll(int? carId)
+        // GET: CarDetails/ManageAll
+        public ActionResult ManageAll(int? carId)
         {
             CarSpecificationViewModel cs;
             if (carId.HasValue)
@@ -82,12 +30,12 @@ namespace CarRentalWebSite
             return View(cs);
         }
 
-        // POST: CarDetails/CreateAll
+        // POST: CarDetails/ManageAll
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateAll(CarSpecificationViewModel model, int carId)
+        public ActionResult ManageAll(CarSpecificationViewModel model, int carId)
         {
             Car car = db.CarSet.Find(carId);
             ICollection<CarDetail> carSpecification = db.CarSet.Find(carId).CarDetails;
@@ -138,62 +86,114 @@ namespace CarRentalWebSite
             return RedirectToAction("Details", "Cars", new { id = carId });
         }
 
+        // GET: CarDetails
+        //public ActionResult Index()
+        //{
+        //    return View(db.CarDetailSet.ToList());
+        //}
+
+        // GET: CarDetails/Details/5
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    CarDetail carDetail = db.CarDetailSet.Find(id);
+        //    if (carDetail == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(carDetail);
+        //}
+
+        //// GET: CarDetails/Create
+        //public ActionResult Create(int? carId)
+        //{
+        //    var carDetail = new CarDetail();
+        //    if (carId.HasValue)
+        //    {
+        //        var car = db.CarSet.Find(carId.Value);
+        //        carDetail.Car = car;
+        //    }
+        //    return View(carDetail);
+        //}
+
+        //// POST: CarDetails/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "Id,Type,Value")] CarDetail carDetail, int carId)
+        //{
+        //    carDetail.Car = db.CarSet.Find(carId);
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.CarDetailSet.Add(carDetail);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Details", "Cars", new { id = carId });
+        //    }
+
+        //    return View(carDetail);
+        //}
+
+
         // GET: CarDetails/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CarDetail carDetail = db.CarDetailSet.Find(id);
-            if (carDetail == null)
-            {
-                return HttpNotFound();
-            }
-            return View(carDetail);
-        }
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    CarDetail carDetail = db.CarDetailSet.Find(id);
+        //    if (carDetail == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(carDetail);
+        //}
 
-        // POST: CarDetails/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Type,Value")] CarDetail carDetail)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(carDetail).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(carDetail);
-        }
+        //// POST: CarDetails/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "Id,Type,Value")] CarDetail carDetail)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(carDetail).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(carDetail);
+        //}
 
-        // GET: CarDetails/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CarDetail carDetail = db.CarDetailSet.Find(id);
-            if (carDetail == null)
-            {
-                return HttpNotFound();
-            }
-            return View(carDetail);
-        }
+        //// GET: CarDetails/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    CarDetail carDetail = db.CarDetailSet.Find(id);
+        //    if (carDetail == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(carDetail);
+        //}
 
-        // POST: CarDetails/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            CarDetail carDetail = db.CarDetailSet.Find(id);
-            db.CarDetailSet.Remove(carDetail);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// POST: CarDetails/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    CarDetail carDetail = db.CarDetailSet.Find(id);
+        //    db.CarDetailSet.Remove(carDetail);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

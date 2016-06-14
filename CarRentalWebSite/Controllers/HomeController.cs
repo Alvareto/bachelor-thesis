@@ -120,6 +120,7 @@ namespace CarRentalWebSite.Controllers
             };
             ViewBag.Available = model.IsAvailable; // = Available(model.Reservation, model.Car);
             //if (!ModelState.IsValid) ViewBag.Available = false;
+            TempData["Found"] = true;
 
             return View("Index", model);
         }

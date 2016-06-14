@@ -88,34 +88,54 @@
         @if (User.IsInRole(CustomRoles.Administrator))
         {
             <p>
-                @Html.ActionLink(linkText: "Unesi specifikaciju automobila", actionName: "CreateAll", controllerName: "CarDetails", routeValues: new { carId = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+                @Html.ActionLink(linkText: "Upravljaj specifikacijom automobila", actionName: "ManageAll", controllerName: "CarDetails", routeValues: new { carId = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
             </p>
         }
-        <table class="table">
-            @foreach (var item in Model.CarDetails)
-            {
-                <tr>
-                    <td>
-                        @Html.Label(item.Type.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2 table-label" })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value)
-                    </td>
-                    <td>
-                        @Html.HiddenFor(modelItem => item.Id)
-                    </td>
+        <div class="row">
+            <div class="col-md-5">
+                <table class="table">
+                    @foreach (var item in Model.CarDetails)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Label(item.Type.GetAttributeDescription(), htmlAttributes: new { @class = "control-label col-md-2 table-label" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Value)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.Id)
+                            </td>
+                        </tr>
+                    }
 
-                    <td>
-                        @Html.ActionLink("Detalji", "Details", "CarDetails", new { id = item.Id }, new { })
-                        @if (User.IsInRole(CustomRoles.Administrator))
-                        {
-                            @Html.ActionLink("Uredi", "Edit", "CarDetails", new { id = item.Id }, new { })
-                            @Html.ActionLink("Izbriši", "Delete", "CarDetails", new { id = item.Id }, new { })
-                        }
-                    </td>
-                </tr>
-            }
-
-        </table>
+                </table>
+            </div>
+            <div class="col-md-7">
+                <table class="table">
+                    @foreach (var item in Model.Reviews)
+                    {
+                        <tr>
+                            <td col-span="3">
+                                @for (int i = 0; i < item.Rating; i++)
+                                {
+                                    <span class="glyphicon glyphicon-star"></span>
+                                }
+                                @for (int i = 0; i < 5 - item.Rating; i++)
+                                {
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+                            @*<td>
+                                @Html.ActionLink(">", "Details", new {id = item.Id})
+                            </td>*@
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
     </div>
 </div>

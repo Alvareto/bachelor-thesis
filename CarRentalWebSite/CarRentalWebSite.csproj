@@ -250,11 +250,6 @@
     <Content Include="Views\Cars\Details.cshtml" />
     <Content Include="Views\Cars\Edit.cshtml" />
     <Content Include="Views\Cars\Index.cshtml" />
-    <Content Include="Views\CarDetails\Create.cshtml" />
-    <Content Include="Views\CarDetails\Delete.cshtml" />
-    <Content Include="Views\CarDetails\Details.cshtml" />
-    <Content Include="Views\CarDetails\Edit.cshtml" />
-    <Content Include="Views\CarDetails\Index.cshtml" />
     <Content Include="Views\Offices\Create.cshtml" />
     <Content Include="Views\Offices\Delete.cshtml" />
     <Content Include="Views\Offices\Details.cshtml" />
@@ -270,7 +265,7 @@
     <Content Include="Views\Reviews\Index.cshtml" />
     <Content Include="Views\Shared\_OfficePartial.cshtml" />
     <Content Include="Views\Cars\Search.cshtml" />
-    <Content Include="Views\CarDetails\CreateAll.cshtml" />
+    <Content Include="Views\CarDetails\ManageAll.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
