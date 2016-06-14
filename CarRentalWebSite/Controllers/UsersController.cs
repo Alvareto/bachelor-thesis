@@ -67,7 +67,6 @@ namespace CarRentalWebSite
             {
                 return HttpNotFound();
             }
-            var inrole = UserManager.IsInRole(applicationUser.Id, CustomRoles.Administrator);
 
             ViewBag.IsAdmin = UserManager.IsInRole(applicationUser.Id, CustomRoles.Administrator);
             ViewBag.Reservations = con.ReservationSet.Where(reservation => reservation.Client_Id == applicationUser.Id).ToList();
@@ -77,7 +76,7 @@ namespace CarRentalWebSite
         // GET: Users/Create
         public ActionResult Create()
         {
-            return new HttpStatusCodeResult(HttpStatusCode.MethodNotAllowed, "Direct creation of the User object is not supported. Use registration form to create new User object. If you're an existing Administrator and want to promote an existing User to Administrator role, please visit User Management page.");
+            return new HttpStatusCodeResult(HttpStatusCode.MethodNotAllowed, "Direct creation of the User object is not allowed. Use registration form to create new User object. If you're an existing Administrator and want to promote an existing User to Administrator role, please visit User Management page.");
         }
 
         // GET: Users/Edit/5
@@ -87,11 +86,19 @@ namespace CarRentalWebSite
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // If User is not Administrator, he's not allowed to edit other User profiles (he can edit his only)
+            if (!User.IsInRole(CustomRoles.Administrator) && id != User.Identity.GetUserId())
+            {
+                return new HttpUnauthorizedResult("You can edit only your User profile. If you think this was a mistake, contact your Administrator.");
+            }
+
             ApplicationUser applicationUser = db.Users.Find(id);
             if (applicationUser == null)
             {
                 return HttpNotFound();
             }
+
             return View(applicationUser);
         }
 
@@ -146,8 +153,8 @@ namespace CarRentalWebSite
             }
             base.Dispose(disposing);
         }
-        //RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
+        //[Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult MakeAdmin(string id)
         {
             if (id == null)
@@ -168,6 +175,8 @@ namespace CarRentalWebSite
 
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult RemoveAdmin(string id)
         {
             if (id == null)
@@ -209,6 +218,7 @@ namespace CarRentalWebSite
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Deblock(string id)
         {
             if (id == null)

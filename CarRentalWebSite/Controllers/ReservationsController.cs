@@ -88,6 +88,7 @@ namespace CarRentalWebSite
             return View();
         }
 
+        /// CUSTOM CREATE ACTION HAS BEEN DEVELOPED
         // POST: Reservations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -238,6 +239,11 @@ namespace CarRentalWebSite
             if (reservation == null)
             {
                 return HttpNotFound();
+            }
+
+            if (reservation.DateStarted >= DateTime.Today)
+            {
+                ModelState.AddModelError("", "Otkazivanje rezervacije nije moguće nakon dana njenog početka.");
             }
 
             reservation.Canceled = true;

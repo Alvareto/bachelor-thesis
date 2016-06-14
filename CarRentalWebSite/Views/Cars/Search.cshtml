@@ -59,8 +59,15 @@
             </td>
         </tr>
     }
-
+    @if (!Model.Any())
+    {
+        <tr>
+            <td colspan="3">
+                Nije pronađen niti jedan automobil u odabranom naselju.
+            </td>
+        </tr>
+    }
 </table>
-<p>
+@*<p>
     @Html.ActionLink("Dodaj novi automobil", "Create", "Cars", new { officeId = ViewBag.OfficeId }, new { @class = "btn btn-success" })
-</p>
+</p>*@

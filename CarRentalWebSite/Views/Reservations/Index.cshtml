@@ -56,7 +56,10 @@
             </td>
             <td>
                 @Html.ActionLink("Detalji", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Otkaži", "Cancel", new { id = item.Id }, new { @class = "btn btn-danger" })
+                @if (item.DateStarted >= DateTime.Today)
+                {
+                    @Html.ActionLink("Otkaži", "Cancel", new { id = item.Id }, new { @class = "btn btn-danger" })
+                }
             </td>
         </tr>
     }

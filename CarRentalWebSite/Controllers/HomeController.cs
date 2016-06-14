@@ -240,40 +240,5 @@ namespace CarRentalWebSite.Controllers
                 return u.UserName;
             return u.FirstName + " " + u.LastName;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-
     }
 }

@@ -75,7 +75,11 @@
 </div>
 <p>
     @Html.ActionLink("Uredi", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
-    @Html.ActionLink("Nazad na popis", "Index", new { }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Deaktiviraj", "Block", new { id = Model.Id }, new { @class = "btn btn-danger" })
+    @if (User.IsInRole(CustomRoles.Administrator))
+    {
+        @Html.ActionLink("Nazad na popis", "Index", new { }, new { @class = "btn btn-default" })
+    }
 </p>
 
 <h3>Rezervacije</h3>
@@ -103,12 +107,14 @@
                 @Html.DisplayFor(modelItem => item.DateEnded)
             </td>
             <td>
-                @Html.ActionLink(item.Car.Manufacturer + " " + item.Car.Model, "Details", "Cars", new { id = item.Car.Id }, new { @class = "" })
+                @Html.ActionLink(item.Car.FullName, "Details", "Cars", new { id = item.Car.Id }, new { @class = "" })
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Detalji", "Details", "Reservations", new { id = item.Id }, new { @class = "btn btn-info" })
+                @if (item.DateStarted >= DateTime.Today)
+                {
+                    @Html.ActionLink("Otkaži", "Cancel", "Reservations", new { id = item.Id }, new { @class = "btn btn-danger" })
+                }
             </td>
         </tr>
     }

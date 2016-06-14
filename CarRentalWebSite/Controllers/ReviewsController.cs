@@ -42,6 +42,12 @@ namespace CarRentalWebSite
         // GET: Reviews
         public ActionResult Index()
         {
+            var reviews = db.ReviewSet.ToList();
+            if (!User.IsInRole(CustomRoles.Administrator))
+            {
+                reviews = reviews.Where(review => review.Reservation != null && review.Reservation.Client_Id == User.Identity.GetUserId()).ToList();
+            }
+            return View(reviews);
             return View(db.ReviewSet.ToList());
         }
 
@@ -61,7 +67,7 @@ namespace CarRentalWebSite
         }
 
         // GET: Reviews/Create
-        public ActionResult Create(int? carId)
+        public ActionResult Create(int? carId, int? reservationId)
         {
             ViewBag.Cars = new SelectList(db.CarSet, "Id", "FullName", carId);
             // Pass on a Review object with predefined Car field.
@@ -73,11 +79,12 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Rating,Comment")] Review review, int carId)
+        public ActionResult Create([Bind(Include = "Id,Rating,Comment")] Review review, int carId, int? reservationId)
         {
             if (ModelState.IsValid)
             {
                 review.Car = db.CarSet.Find(carId);
+                review.Reservation = db.ReservationSet.Find(reservationId.GetValueOrDefault(0));
                 db.ReviewSet.Add(review);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -106,7 +113,7 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Rating,Comment,Car_Id")] Review review)
+        public ActionResult Edit([Bind(Include = "Id,Rating,Comment,Car_Id,Reservation_Id")] Review review)
         {
             if (ModelState.IsValid)
             {
