@@ -1,4 +1,5 @@
-﻿@using CarRentalWebSite.Helpers
+﻿@using CarRental.EntityFramework
+@using CarRentalWebSite.Helpers
 @model CarRental.EntityFramework.Car
 
 @{
@@ -12,8 +13,11 @@
                 Detalji o automobilu
             </h3>
             <div class="pull-right">
-                @Html.ActionLink("Izmjeni podatke", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
-                @Html.ActionLink("Ukloni automobil", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                @if (User.IsInRole(CustomRoles.Administrator))
+                {
+                    @Html.ActionLink("Izmjeni podatke", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Ukloni automobil", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                }
                 @Html.ActionLink("Nazad na popis automobila", "Index", new { }, new { @class = "btn btn-info" })
 
             </div>
@@ -45,10 +49,10 @@
                         <dl class="dl-horizontal">
                             <dt>
                                 @Html.DisplayNameFor(model => model.Office.City)
-                            
+
                                 @Html.DisplayFor(model => model.Office.City)
                             </dt>
-                        </dl><br/>
+                        </dl><br />
                         <hr />
                         <div class="row">
                             <div class="col-md-6">
@@ -81,9 +85,12 @@
     </div>
 
     <div class="panel-body">
-        <p>
-            @Html.ActionLink(linkText: "Unesi specifikaciju automobila", actionName: "CreateAll", controllerName: "CarDetails", routeValues: new { carId = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
-        </p>
+        @if (User.IsInRole(CustomRoles.Administrator))
+        {
+            <p>
+                @Html.ActionLink(linkText: "Unesi specifikaciju automobila", actionName: "CreateAll", controllerName: "CarDetails", routeValues: new { carId = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+            </p>
+        }
         <table class="table">
             @foreach (var item in Model.CarDetails)
             {
@@ -97,10 +104,14 @@
                     <td>
                         @Html.HiddenFor(modelItem => item.Id)
                     </td>
+
                     <td>
-                        @Html.ActionLink("Uredi", "Edit", "CarDetails", new { id = item.Id }, new { }) |
-                        @Html.ActionLink("Detalji", "Details", "CarDetails", new { id = item.Id }, new { }) |
-                        @Html.ActionLink("Izbriši", "Delete", "CarDetails", new { id = item.Id }, new { })
+                        @Html.ActionLink("Detalji", "Details", "CarDetails", new { id = item.Id }, new { })
+                        @if (User.IsInRole(CustomRoles.Administrator))
+                        {
+                            @Html.ActionLink("Uredi", "Edit", "CarDetails", new { id = item.Id }, new { })
+                            @Html.ActionLink("Izbriši", "Delete", "CarDetails", new { id = item.Id }, new { })
+                        }
                     </td>
                 </tr>
             }

@@ -61,10 +61,11 @@ namespace CarRentalWebSite
         }
 
         // GET: Reviews/Create
-        public ActionResult Create(int carId)
+        public ActionResult Create(int? carId)
         {
+            ViewBag.Cars = new SelectList(db.CarSet, "Id", "FullName", carId);
             // Pass on a Review object with predefined Car field.
-            return View(new Review { Car = db.CarSet.Find(carId) });
+            return View();
         }
 
         // POST: Reviews/Create
@@ -105,7 +106,7 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Rating,Comment")] Review review)
+        public ActionResult Edit([Bind(Include = "Id,Rating,Comment,Car_Id")] Review review)
         {
             if (ModelState.IsValid)
             {

@@ -17,6 +17,7 @@ namespace CarRentalWebSite
         private CarRentalWebSiteContext db = new CarRentalWebSiteContext();
 
         // GET: Cars
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Index()
         {
             return View(db.CarSet.ToList());
@@ -56,6 +57,7 @@ namespace CarRentalWebSite
 
 
         // GET: Cars/Create
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Create(int? officeId)
         {
 
@@ -69,6 +71,7 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Create([Bind(Include = "Id,Manufacturer,Model,Price")] Car car, int officeId)
         {
             if (ModelState.IsValid)
@@ -83,6 +86,7 @@ namespace CarRentalWebSite
         }
 
         // GET: Cars/Edit/5
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -102,6 +106,7 @@ namespace CarRentalWebSite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Edit([Bind(Include = "Id,Manufacturer,Model,Price,Office_Id")] Car car)
         {
             if (ModelState.IsValid)
@@ -114,6 +119,7 @@ namespace CarRentalWebSite
         }
 
         // GET: Cars/Delete/5
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -131,6 +137,7 @@ namespace CarRentalWebSite
         // POST: Cars/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult DeleteConfirmed(int id)
         {
             Car car = db.CarSet.Find(id);

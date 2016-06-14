@@ -58,6 +58,17 @@ namespace CarRental.EntityFramework
             else return Price;
         }
 
+        public override string ToString()
+        {
+            return this.Manufacturer + " " + this.Model;
+        }
+
+        public string FullName
+        {
+            get { return this.ToString(); }
+            private set { }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CarDetail> CarDetails { get; set; }
 

@@ -18,8 +18,10 @@ namespace CarRental.EntityFramework
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
+        [Display(Name = "Automobil")]
         public int Car_Id { get; set; }
 
+        [Display(Name = "Rezervacija")]
         public int? Reservation_Id { get; set; }
 
         public virtual Car Car { get; set; }

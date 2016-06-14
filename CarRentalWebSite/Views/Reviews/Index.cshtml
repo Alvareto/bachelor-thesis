@@ -1,13 +1,14 @@
-﻿@model IEnumerable<CarRental.EntityFramework.Review>
+﻿@using CarRental.EntityFramework
+@model IEnumerable<CarRental.EntityFramework.Review>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = (User.IsInRole(CustomRoles.Administrator)) ? "Upravljanje komentarima korisnika" : "Moji komentari";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Napiši novi komentar", "Create")
 </p>
 <table class="table">
     <tr>
@@ -26,26 +27,37 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rating)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Comment)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Car_Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Reservation_Id)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @for (int i = 0; i < item.Rating; i++)
+                {
+                    <span class="glyphicon glyphicon-star"></span>
+                }
+                @for (int i = 0; i < 5 - item.Rating; i++)
+                {
+                    <span class="glyphicon glyphicon-star-empty"></span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.ActionLink(item.Car.FullName, "Details", "Cars", new { id = item.Car_Id }, new { })
+            </td>
+            <td>
+                @if (item.Reservation_Id.HasValue)
+                {
+                    @Html.ActionLink("Rezervacija", "Details", "Reservations", new { id = item.Reservation_Id }, new { })
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Uredi", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Detalji", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Izbriši", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

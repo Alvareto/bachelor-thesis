@@ -48,6 +48,10 @@ namespace CarRentalWebSite
         // GET: Users
         public ActionResult Index()
         {
+            if (!User.IsInRole(CustomRoles.Administrator))
+            {
+                return RedirectToAction("Details", new { id = User.Identity.GetUserId() });
+            }
             return View(db.Users.ToList());
         }
 
@@ -108,6 +112,7 @@ namespace CarRentalWebSite
         }
 
         // GET: Users/Delete/5
+        [Authorize(Roles = CustomRoles.Administrator)]
         public ActionResult Delete(string id)
         {
             if (id == null)

@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using CarRental.EntityFramework
+@{
+    ViewBag.ApplicationName = "Rent-a-car" + (User.IsInRole(CustomRoles.Administrator) ? " Admin" : " ");
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Web stranica za iznajmljivanje automobila</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -17,37 +21,49 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Rent-a-car", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @*@if (User.IsInRole(CustomRoles.Administrator))
+                {
+                    <span class="navbar-brand">Admin</span>
+                }*@
+                @Html.ActionLink((String)ViewBag.ApplicationName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @*<li>@Html.ActionLink("Početna", "Index", "Home")</li>*@
-                    <li>@Html.ActionLink("Automobili", "Index", "Cars")</li>
-                    <li>@Html.ActionLink("Pretraživanje", "Search", "Cars")</li>
-                    <li>@Html.ActionLink("Uredi", "Index", "Offices")</li>
-                    <li>@Html.ActionLink("Rezervacije", "Index", "Reservations")</li>
-                    <li>@Html.ActionLink("Komentari", "Index", "Reviews")</li>
-                    <li>@Html.ActionLink("Korisnici", "Index", "Users")</li>
+                    @if (User.IsInRole(CustomRoles.User) && !User.IsInRole(CustomRoles.Administrator))
+                    {
+                        <li>@Html.ActionLink("Pretraživanje", "Search", "Cars")</li>
+                        <li>@Html.ActionLink("Moje Rezervacije", "Index", "Reservations")</li>
+                        <li>@Html.ActionLink("Moji Komentari", "Index", "Reviews")</li>
+                    }
+                    @if (User.IsInRole(CustomRoles.Administrator))
+                    {
+                        <li>@Html.ActionLink("Ured", "Index", "Offices")</li>
+                        <li>@Html.ActionLink("Automobil", "Index", "Cars")</li>
+                        <li>@Html.ActionLink("Rezervacija", "Index", "Reservations")</li>
+                        <li>@Html.ActionLink("Komentar", "Index", "Reviews")</li>
+                        <li>@Html.ActionLink("Korisnik", "Index", "Users")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-<div class="container body-content">
-    
-    @RenderBody()
-    <hr/>
-    <footer>
-        <div class="row">
-            <div class="col-lg-6">
-                <p>&copy; @DateTime.Now.Year - Ivan Grgurina</p>
+    <div class="container body-content">
+
+        @RenderBody()
+        <hr />
+        <footer>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>&copy; @DateTime.Now.Year - Ivan Grgurina</p>
+                </div>
+                <div class="col-lg-6">
+                    <small class="pull-right">*PDV je uključen u cijenu. Sve cijene su konačne i odnose se na 1 dan iznajmljivanja. Popust vrijedi van sezone.</small>
+                </div>
             </div>
-            <div class="col-lg-6">
-                <small class="pull-right">*PDV je uključen u cijenu. Sve cijene su konačne i odnose se na 1 dan iznajmljivanja. Popust vrijedi van sezone.</small>
-            </div>
-        </div>
-    </footer>
-</div>
+        </footer>
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

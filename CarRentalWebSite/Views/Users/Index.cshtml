@@ -3,77 +3,77 @@
 @model IEnumerable<CarRentalWebSite.Models.ApplicationUser>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Upravljanje korisnicima";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
-<table class="table">
-    <tr>
-        <th></th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Blocked)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Administrator)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
-            <td>
-
-                @Html.ActionLink("Profil", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-
-                @* Administrator can only edit his own User account. *@
-                @if (item.Id == User.Identity.GetUserId())
-                {
-                    @Html.ActionLink("Uredi", "Edit", new { id = item.Id }, new { @class = "btn btn-default" });
-                }
-
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Blocked)
-                @(!item.Blocked ? Html.ActionLink("Blokiraj", "Block", new {id = item.Id}, new {@class = "btn btn-danger"}) : Html.ActionLink("Aktiviraj", "Deblock", new {id = item.Id}, new {@class = "btn btn-success"}))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Administrator)
-                @(!item.Administrator ? Html.ActionLink("Proglasi administratorom", "MakeAdmin", new {id = item.Id}, new {@class = "btn btn-success"}) : Html.ActionLink("Ukloni administratora", "RemoveAdmin", new {id = item.Id}, new {@class = "btn btn-danger"}))
-            </td>
-
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Blocked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Administrator)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+
+                    @Html.ActionLink("Profil", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+
+                    @* Administrator can only edit his own User account. *@
+                    @if (item.Id == User.Identity.GetUserId())
+                    {
+                        @Html.ActionLink("Uredi", "Edit", new { id = item.Id }, new { @class = "btn btn-default" });
+                    }
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Blocked)
+                    @(!item.Blocked ? Html.ActionLink("Blokiraj", "Block", new { id = item.Id }, new { @class = "btn btn-danger" }) : Html.ActionLink("Aktiviraj", "Deblock", new { id = item.Id }, new { @class = "btn btn-success" }))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Administrator)
+                    @(!item.Administrator ? Html.ActionLink("Proglasi administratorom", "MakeAdmin", new { id = item.Id }, new { @class = "btn btn-success" }) : Html.ActionLink("Ukloni administratora", "RemoveAdmin", new { id = item.Id }, new { @class = "btn btn-danger" }))
+                </td>
+
+            </tr>
+        }
+
+    </table>

@@ -49,7 +49,7 @@ namespace CarRentalWebSite
         public ActionResult Index()
         {
             var reservations = db.ReservationSet.Where(reservation => !reservation.Canceled).ToList();
-            if (User.IsInRole(CustomRoles.User))
+            if (!User.IsInRole(CustomRoles.Administrator))
             {
                 reservations = reservations.Where(reservation => reservation.Client_Id == User.Identity.GetUserId()).ToList();
             }

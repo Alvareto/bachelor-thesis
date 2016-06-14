@@ -78,6 +78,7 @@ namespace CarRentalWebSite.Controllers
             if (UserManager.FindByEmail(model.Email).Blocked)
             {
                 ModelState.AddModelError("", "Vaš račun je blokiran.");
+                return View(model);
             }
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true

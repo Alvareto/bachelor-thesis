@@ -14,20 +14,20 @@
         <div class="panel-heading">
             @using (Html.BeginForm("ChangeCity"))
             {
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-                <div class="form-inline">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @*@Html.LabelFor(model => model.Car.Office.City, htmlAttributes: new { @class = "control-label col-md-2", id = "cityName" })*@
-                        @Html.DropDownList("officeId", (SelectList)ViewBag.Offices, new { @class = "form-control", id = "cityName" })
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Promijeni grad" class="btn btn-success" />
-                        </div>
+            <div class="form-inline">
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger text-danger" })
+                <div class="form-group">
+                    @*@Html.LabelFor(model => model.Car.Office.City, htmlAttributes: new { @class = "control-label col-md-2", id = "cityName" })*@
+                    @Html.DropDownList("officeId", (SelectList)ViewBag.Offices, new { @class = "form-control", id = "cityName" })
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Promijeni grad" class="btn btn-success" />
                     </div>
                 </div>
+            </div>
 
             }
 
@@ -36,12 +36,12 @@
             @if (Model.PrevCar != null)
             {
 
-                @Html.ActionLink("<", "Index", new { carId = Model.PrevCar.Id }, new { @class = "btn btn-default btn-circle pull-left" })
+            @Html.ActionLink("<", "Index", new { carId = Model.PrevCar.Id }, new { @class = "btn btn-default btn-circle pull-left" })
 
             }
             @if (Model.NextCar != null)
             {
-                @Html.ActionLink(">", "Index", new { carId = Model.NextCar.Id }, new { @class = "btn btn-default btn-circle pull-right" })
+            @Html.ActionLink(">", "Index", new { carId = Model.NextCar.Id }, new { @class = "btn btn-default btn-circle pull-right" })
             }
         </div>
 
@@ -49,274 +49,277 @@
     </div>
 </div>
 
-<div class="row">
+@if ((bool)TempData["Found"])
+{
+    <div class="row">
 
-    <div class="col-md-12">
-        <div class="row">
+        <div class="col-md-12">
+            <div class="row">
 
-            @*<div class="col-md-3">
-                    <p class="lead">Shop Name</p>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item active">Category 1</a>
-                        <a href="#" class="list-group-item">Category 2</a>
-                        <a href="#" class="list-group-item">Category 3</a>
-                    </div>
-                </div>*@
-
-
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img class="img-responsive" src="http://placehold.it/600x400" alt="">
-                        <hr />
-                        <div id="images">
-                            <div class="item">
-                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
-                            </div>
-                            <div class="item">
-                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
-                            </div>
-                            <div class="item">
-                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
-                            </div>
-                            <div class="item">
-                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
-                            </div>
-                            <div class="item">
-                                <img class="img-responsive" src="http://placehold.it/200x200" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <h4 href="#">@Html.DisplayFor(model => model.Car.Manufacturer) @Html.DisplayFor(model => model.Car.Model)</h4>
-                            </div>
-                            <div class="col-md-5">
-
-                                <div class="ratings pull-right">
-                                    <p>
-                                        @for (int i = 0; i < Model.RatingStars; i++)
-                                        {
-                                            <span class="glyphicon glyphicon-star"></span>
-                                        }
-                                        @for (int i = 0; i < 5 - Model.RatingStars; i++)
-                                        {
-                                            <span class="glyphicon glyphicon-star-empty"></span>
-                                        }
-                                        @Html.FormatValue(Model.AverageRating, "{0:N2}")
-                                    </p>
-                                </div>
-
-                            </div>
-
-
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <dl class="">
-                                    @foreach (var item in Model.Specification)
-                                    {
-                                        <dt style="min-width: 220px;">
-                                            @Html.Raw(item.Type.GetAttributeDescription())
-                                        </dt>
-                                        <dd>
-                                            @Html.DisplayFor(modelItem => item.Value)
-                                        </dd>
-                                    }
-                                </dl>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-12">
-                                @if (!(Boolean)ViewBag.Available)
-                                {
-                                    using (Html.BeginForm("Check", "Home"))
-                                    {
-                                        @Html.AntiForgeryToken()
-
-                                        <div class="form-horizontal">
-                                            <h4>Rezervacija</h4>
-                                            <hr />
-                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.Reservation.DateStarted, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Reservation.DateStarted, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
-                                                    @Html.ValidationMessageFor(model => model.Reservation.DateStarted, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.Reservation.DateEnded, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Reservation.DateEnded, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
-                                                    @Html.ValidationMessageFor(model => model.Reservation.DateEnded, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.Car.Office.City, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.DropDownList("officeId", (SelectList)ViewBag.Offices, new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.Car.Office.City, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-
-                                            @Html.Hidden("carId", Model.Car.Id, new { @class = "form-control" })
-
-                                            <div class="form-group">
-                                                <div class="col-md-offset-2 col-md-10">
-                                                    <input type="submit" value="Provjeri dostupnost" class="btn btn-info" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                                else
-                                {
-                                    <dl class="dl-horizontal">
-                                        <dt>
-                                            @Html.DisplayNameFor(model => model.Reservation.DateStarted)
-                                        </dt>
-                                        <dd>
-                                            @Html.DisplayFor(model => model.Reservation.DateStarted)
-                                        </dd>
-                                        <dt>
-                                            @Html.DisplayNameFor(model => model.Reservation.DateEnded)
-                                        </dt>
-                                        <dd>
-                                            @Html.DisplayFor(model => model.Reservation.DateEnded)
-                                        </dd>
-                                    </dl>
-
-                                }
-
-                                <hr />
-                                @if ((Boolean)ViewBag.Available)
-                                {
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="text-success">
-                                                Automobil je <strong>dostupan</strong> u traženo vrijeme.
-                                            </p>
-                                            <p>
-                                                Želite li napraviti rezervaciju?
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6 pull-right">
-                                            @using (Html.BeginForm("Reserve", "Home", new { carId = Model.Car.Id, started = Model.Reservation.DateStarted, ended = Model.Reservation.DateEnded }, FormMethod.Post))
-                                            {
-                                                @Html.AntiForgeryToken()
-                                                <dl class="dl-horizontal">
-                                                    <dt>
-                                                        @Html.DisplayNameFor(model => model.Car.Price)
-                                                    </dt>
-                                                    <dd>
-                                                        @string.Format("{0:C}", Model.Car.GetReservationPrice(Model.Reservation.DateStarted))
-                                                    </dd>
-                                                    <dt>
-                                                        Broj dana
-                                                    </dt>
-                                                    <dd>
-                                                        @Html.Raw((Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days + " dana")
-                                                    </dd>
-
-                                                    <hr />
-                                                    <dt>
-                                                        Ukupno
-                                                    </dt>
-                                                    <dd>
-                                                        <b>@string.Format("{0:C}", (Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days * Model.Car.GetReservationPrice(Model.Reservation.DateStarted))</b>
-                                                    </dd>
-                                                </dl>
-                                                @Html.ActionLink("Odustani", "Cancel", new { carId = Model.Car.Id }, new { @class = "btn btn-warning" })
-
-                                                <input type="submit" value="Rezerviraj" class="btn btn-success" />
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p class="text-danger">
-                                                Automobil <strong>nije dostupan</strong> u traženo vrijeme.
-                                            </p>
-                                            <p>
-                                                Pokušajte promijeniti termin rezervacije.
-                                            </p>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="well-sm" style="-ms-border-radius: 0; border-radius: 0;">
-                <p class="pull-left review">@Html.Raw(Model.Car.Reviews.Count) komentara</p>
-                <div class="text-right">
-                    @Html.ActionLink("Ostavi komentar o iskustvu vožnje", "Create", "Reviews", new { carId = Model.Car.Id }, new { @class = "btn btn-success" })
-                </div>
-
-                @foreach (var item in Model.Car.Reviews)
-                {
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            @for (int i = 0; i < item.Rating; i++)
-                            {
-                                <span class="glyphicon glyphicon-star"></span>
-                            }
-                            @for (int i = 0; i < 5 - item.Rating; i++)
-                            {
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            }
-                            @if (item.Reservation != null && item.Reservation.Client_Id != null)
-                            {
-                                @Html.ActionLink(((HomeController)this.ViewContext.Controller).UserName(item.Reservation.Client_Id), "Details", "Users", new { id = item.Reservation.Client_Id }, new { @class = "" })
-                                <span class="pull-right">@Html.DisplayFor(modelItem => item.Reservation.DateEnded)</span>
-                            }
-                            else
-                            {
-                                <i>Skriveni korisnik</i>
-                            }
-
-                            <p>@Html.DisplayFor(modelItem => item.Comment)</p>
-                        </div>
-                    </div>
-                }
-                <hr>
-
-                @*<hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            Anonymous
-                            <span class="pull-right">15 days ago</span>
-                            <p>I've seen some better than this, but not at this price. I definitely recommend this item.</p>
+                @*<div class="col-md-3">
+                        <p class="lead">Shop Name</p>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item active">Category 1</a>
+                            <a href="#" class="list-group-item">Category 2</a>
+                            <a href="#" class="list-group-item">Category 3</a>
                         </div>
                     </div>*@
 
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img class="img-responsive" src="http://placehold.it/600x400" alt="">
+                            <hr />
+                            <div id="images">
+                                <div class="item">
+                                    <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="img-responsive" src="http://placehold.it/200x200" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <h4 href="#">@Html.DisplayFor(model => model.Car.Manufacturer) @Html.DisplayFor(model => model.Car.Model)</h4>
+                                </div>
+                                <div class="col-md-5">
+
+                                    <div class="ratings pull-right">
+                                        <p>
+                                            @for (int i = 0; i < Model.RatingStars; i++)
+                                        {
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        }
+                                            @for (int i = 0; i < 5 - Model.RatingStars; i++)
+                                        {
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                        }
+                                            @Html.FormatValue(Model.AverageRating, "{0:N2}")
+                                        </p>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <dl class="">
+                                        @foreach (var item in Model.Specification)
+                                    {
+                                    <dt style="min-width: 220px;">
+                                        @Html.Raw(item.Type.GetAttributeDescription())
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(modelItem => item.Value)
+                                    </dd>
+                                    }
+                                    </dl>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @if (!(Boolean)ViewBag.Available)
+                                {
+                                    using (Html.BeginForm("Check", "Home"))
+                                    {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-horizontal">
+                                    <h4>Rezervacija</h4>
+                                    <hr />
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Reservation.DateStarted, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Reservation.DateStarted, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
+                                            @Html.ValidationMessageFor(model => model.Reservation.DateStarted, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Reservation.DateEnded, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Reservation.DateEnded, new { htmlAttributes = new { @class = "form-control", min = DateTime.Now } })
+                                            @Html.ValidationMessageFor(model => model.Reservation.DateEnded, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Car.Office.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("officeId", (SelectList)ViewBag.Offices, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Car.Office.City, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    @Html.Hidden("carId", Model.Car.Id, new { @class = "form-control" })
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Provjeri dostupnost" class="btn btn-info" />
+                                        </div>
+                                    </div>
+                                </div>
+                                    }
+                                }
+                                else
+                                {
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Reservation.DateStarted)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Reservation.DateStarted)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Reservation.DateEnded)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Reservation.DateEnded)
+                                    </dd>
+                                </dl>
+
+                                }
+
+                                    <hr />
+                                    @if ((Boolean)ViewBag.Available)
+                                {
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="text-success">
+                                            Automobil je <strong>dostupan</strong> u traženo vrijeme.
+                                        </p>
+                                        <p>
+                                            Želite li napraviti rezervaciju?
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 pull-right">
+                                        @using (Html.BeginForm("Reserve", "Home", new { carId = Model.Car.Id, started = Model.Reservation.DateStarted, ended = Model.Reservation.DateEnded }, FormMethod.Post))
+                                            {
+                                            @Html.AntiForgeryToken()
+                                            <dl class="dl-horizontal">
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.Car.Price)
+                                                </dt>
+                                                <dd>
+                                                    @string.Format("{0:C}", Model.Car.GetReservationPrice(Model.Reservation.DateStarted))
+                                                </dd>
+                                                <dt>
+                                                    Broj dana
+                                                </dt>
+                                                <dd>
+                                                    @Html.Raw((Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days + " dana")
+                                                </dd>
+
+                                                <hr />
+                                                <dt>
+                                                    Ukupno
+                                                </dt>
+                                                <dd>
+                                                    <b>@string.Format("{0:C}", (Model.Reservation.DateEnded - Model.Reservation.DateStarted).Days * Model.Car.GetReservationPrice(Model.Reservation.DateStarted))</b>
+                                                </dd>
+                                            </dl>
+                                            @Html.ActionLink("Odustani", "Cancel", new { carId = Model.Car.Id }, new { @class = "btn btn-warning" })
+
+                                            <input type="submit" value="Rezerviraj" class="btn btn-success" />
+                                            }
+                                    </div>
+                                </div>
+                                }
+                                else
+                                {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p class="text-danger">
+                                            Automobil <strong>nije dostupan</strong> u traženo vrijeme.
+                                        </p>
+                                        <p>
+                                            Pokušajte promijeniti termin rezervacije.
+                                        </p>
+                                    </div>
+                                </div>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="well-sm" style="-ms-border-radius: 0; border-radius: 0;">
+                    <p class="pull-left review">@Html.Raw(Model.Car.Reviews.Count) komentara</p>
+                    <div class="text-right">
+                        @Html.ActionLink("Ostavi komentar o iskustvu vožnje", "Create", "Reviews", new { carId = Model.Car.Id }, new { @class = "btn btn-success" })
+                    </div>
+
+                    @foreach (var item in Model.Car.Reviews)
+                {
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        @for (int i = 0; i < item.Rating; i++)
+                            {
+                            <span class="glyphicon glyphicon-star"></span>
+                            }
+                        @for (int i = 0; i < 5 - item.Rating; i++)
+                            {
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            }
+                        @if (item.Reservation != null && item.Reservation.Client_Id != null)
+                            {
+                            @Html.ActionLink(((HomeController)this.ViewContext.Controller).UserName(item.Reservation.Client_Id), "Details", "Users", new { id = item.Reservation.Client_Id }, new { @class = "" })
+                            <span class="pull-right">@Html.DisplayFor(modelItem => item.Reservation.DateEnded)</span>
+                            }
+                            else
+                            {
+                            <i>Skriveni korisnik</i>
+                            }
+
+                        <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+                    </div>
+                </div>
+                }
+                    <hr>
+
+                    @*<hr>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star-empty"></span>
+                                Anonymous
+                                <span class="pull-right">15 days ago</span>
+                                <p>I've seen some better than this, but not at this price. I definitely recommend this item.</p>
+                            </div>
+                        </div>*@
+
+                </div>
+
             </div>
+
 
         </div>
 
-
     </div>
-
-</div>
+}

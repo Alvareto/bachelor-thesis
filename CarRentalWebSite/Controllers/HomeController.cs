@@ -52,7 +52,7 @@ namespace CarRentalWebSite.Controllers
             }
             else
             {
-                // carId == null && officeId == null  => first car in first office
+                // carId == null && officeId == null  => first office -> first car
                 if (officeId == null)
                 {
                     var officeFirst = db.OfficeSet.FirstOrDefault();
@@ -61,7 +61,17 @@ namespace CarRentalWebSite.Controllers
                 }
 
                 // carId == null && officeId != null => first car in office
-                car = db.CarSet.FirstOrDefault(o => o.Office.Id == officeId);
+                if (db.CarSet.Any(o => o.Office.Id == officeId))
+                {
+                    car = db.CarSet.First(o => o.Office.Id == officeId);
+                }
+                else
+                {// show message - "no cars found"
+                    ModelState.AddModelError("", "Trenutno nije dostupan niti jedan automobil u odabranom gradu.");
+                    ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
+                    TempData["Found"] = false;
+                    return View(new CarDetailsViewModel());
+                }
             }
 
             ViewBag.Offices = new SelectList(db.OfficeSet, "Id", "City", officeId);
@@ -78,7 +88,7 @@ namespace CarRentalWebSite.Controllers
             };
 
             //ViewBag.Available = false;
-
+            TempData["Found"] = true;
 
             return View(model);
         }
@@ -187,12 +197,6 @@ namespace CarRentalWebSite.Controllers
             {
                 return false;
             }
-
-            //// Expired news - show Details without PREV and NEXT
-            //if (car.DatumIsteka < DateTime.Now || isLoggedIn)
-            //{
-            //    return true;
-            //}
 
             var carId = db.CarSet.Where(n => n.Office_Id == car.Office_Id)
                                   .OrderBy(n => n.Id).ToArray();
